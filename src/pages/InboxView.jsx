@@ -9,7 +9,7 @@ import Dot from '../components/ui/Dot';
 import StatusBadge from '../components/ui/StatusBadge';
 import PriBadge from '../components/ui/PriBadge';
 import QDot from '../components/ui/QDot';
-
+//s
 export default function InboxView({ tickets, onSelect, role, active, loading }) {
   const { user }          = useAuth();
   const { queues, users } = useAdmin();
