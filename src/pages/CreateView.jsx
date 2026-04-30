@@ -3,12 +3,13 @@ import { useAdmin } from '../context/AdminContext';
 import { PRI_CFG, CATEGORIES, SLA_MAP } from '../constants';
 import { api } from '../services/api';
 import { C, iS } from '../styles/tokens';
+import Avatar from '../components/ui/Avatar';
 import FormField from '../components/forms/FormField';
 
-const EMPTY = { title: '', queue_id: '', category: 'Infraestructura', priority: 'medium', desc: '', tags: '' };
+const EMPTY = { title: '', queue_id: '', category: 'Infraestructura', priority: 'medium', desc: '', tags: '', assignee_id: '' };
 
-export default function CreateView({ onCreated }) {
-  const { queues }  = useAdmin();
+export default function CreateView({ role, onCreated }) {
+  const { queues, users } = useAdmin();
   const [form,    setForm]    = useState(EMPTY);
   const [created, setCreated] = useState(null);
   const [saving,  setSaving]  = useState(false);
@@ -31,6 +32,7 @@ export default function CreateView({ onCreated }) {
         priority:    form.priority,
         description: form.desc,
         tags:        form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+        ...(form.assignee_id && { assignee_id: Number(form.assignee_id) }),
       });
       setCreated(ticket);
       onCreated?.();
@@ -92,6 +94,23 @@ export default function CreateView({ onCreated }) {
             </select>
           </FormField>
         </div>
+
+        {role !== 'customer' && (
+          <FormField label="Asignar a">
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              {form.assignee_id && (() => {
+                const u = users.find(x => String(x.id) === String(form.assignee_id));
+                return u ? <Avatar name={u.name} size={22} /> : null;
+              })()}
+              <select value={form.assignee_id} onChange={e => f('assignee_id', e.target.value)} style={{ ...iS, flex: 1 }}>
+                <option value="">Sin asignar</option>
+                {users.filter(u => u.active && u.role_id !== 'customer').map(u => (
+                  <option key={u.id} value={u.id}>{u.name}</option>
+                ))}
+              </select>
+            </div>
+          </FormField>
+        )}
 
         <FormField label="Descripción">
           <textarea value={form.desc} onChange={e => f('desc', e.target.value)} placeholder="Detalla el problema, pasos y contexto…" rows={4} style={{ ...iS, width: '100%', resize: 'vertical', lineHeight: 1.6 }} />

@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ticketera — Documentación del Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg0: #191919; --bg1: #1f1f1f; --bg2: #252525; --bg3: #2d2d2d;
+    --border: #313131; --borderL: #3a3a3a;
+    --accent: #cf7452; --accentD: #b86040; --accentL: #d98b6a;
+    --accentMuted: rgba(207,116,82,.11);
+    --green: #78b07a; --amber: #c98c4a; --red: #c46262;
+    --blue: #6892b4; --teal: #5ca89a; --purple: #9b78b0;
+    --text0: #ede9e4; --text1: #8a8480; --text2: #524e4c;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg0);
+    color: var(--text0);
+    font-size: 13px;
+    line-height: 1.65;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  nav {
+    width: 220px;
+    background: var(--bg1);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    padding: 28px 0 40px;
+    flex-shrink: 0;
+  }
+  .nav-brand {
+    padding: 0 18px 22px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 14px;
+  }
+  .nav-brand .logo {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 9px;
+  }
+  .nav-brand .app-name { font-size: 13px; font-weight: 600; color: var(--text0); }
+  .nav-brand .app-sub  { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; }
+  .nav-section-label {
+    font-size: 9px; font-weight: 600; color: var(--text2);
+    text-transform: uppercase; letter-spacing: .1em;
+    padding: 10px 18px 4px;
+  }
+  nav a {
+    display: block; padding: 5px 18px;
+    font-size: 11.5px; color: var(--text1);
+    text-decoration: none; border-radius: 4px;
+    margin: 0 4px 1px;
+    transition: all .1s;
+  }
+  nav a:hover { background: var(--bg2); color: var(--text0); }
+  nav a.active { background: var(--accentMuted); color: var(--accent); }
+
+  /* ── Main ── */
+  main {
+    margin-left: 220px;
+    flex: 1;
+    max-width: 900px;
+    padding: 52px 56px 80px;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 40px;
+    margin-bottom: 52px;
+  }
+  .cover .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 500; color: var(--accent);
+    background: var(--accentMuted);
+    border: 1px solid rgba(207,116,82,.2);
+    padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 18px; letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .cover h1 { font-size: 32px; font-weight: 600; color: var(--text0); letter-spacing: -.02em; line-height: 1.2; margin-bottom: 10px; }
+  .cover .subtitle { font-size: 14px; color: var(--text1); margin-bottom: 28px; }
+  .meta-grid { display: flex; gap: 32px; flex-wrap: wrap; }
+  .meta-item .label { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 3px; }
+  .meta-item .value { font-size: 12px; color: var(--text0); font-weight: 500; }
+
+  /* ── Sections ── */
+  section { margin-bottom: 60px; }
+  h2 {
+    font-size: 18px; font-weight: 600; color: var(--text0);
+    margin-bottom: 6px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -.01em;
+  }
+  h3 { font-size: 13px; font-weight: 600; color: var(--text0); margin: 24px 0 8px; }
+  h4 { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: .07em; margin: 18px 0 6px; }
+  p  { color: var(--text1); margin-bottom: 10px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 16px 18px; margin-bottom: 10px;
+  }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .card-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.four  { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  /* ── Color swatches ── */
+  .swatch-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .swatch {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    width: 72px;
+  }
+  .swatch .dot {
+    width: 40px; height: 40px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,.06);
+  }
+  .swatch .name { font-size: 9px; color: var(--text2); font-family: 'IBM Plex Mono', monospace; text-align: center; }
+  .swatch .hex  { font-size: 9px; color: var(--text1); font-family: 'IBM Plex Mono', monospace; text-align: center; }
+
+  /* ── Route tables ── */
+  .route-block { margin-bottom: 28px; }
+  .route-row {
+    display: grid; grid-template-columns: 58px 1fr auto;
+    align-items: start; gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .route-row:last-child { border-bottom: none; }
+  .route-row:hover { background: var(--bg3); }
+  .method {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    padding: 2px 6px; border-radius: 3px;
+    text-align: center; align-self: start;
+    margin-top: 1px;
+  }
+  .GET    { background: rgba(104,146,180,.15); color: var(--blue);   }
+  .POST   { background: rgba(120,176,122,.15); color: var(--green);  }
+  .PATCH  { background: rgba(201,140, 74,.15); color: var(--amber);  }
+  .DELETE { background: rgba(196, 98, 98,.15); color: var(--red);    }
+  .route-path { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text0); }
+  .route-desc { font-size: 11px; color: var(--text1); margin-top: 2px; }
+  .route-auth {
+    font-size: 9px; font-weight: 500; padding: 2px 7px; border-radius: 3px;
+    white-space: nowrap; align-self: start; margin-top: 2px;
+  }
+  .auth-admin  { background: rgba(155,120,176,.15); color: var(--purple); }
+  .auth-agent  { background: rgba(207,116, 82,.11); color: var(--accent); }
+  .auth-any    { background: rgba(92, 168,154,.12); color: var(--teal);   }
+  .auth-public { background: var(--bg3); color: var(--text2); }
+
+  /* ── Schema tables ── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 11.5px; }
+  thead th {
+    text-align: left; padding: 6px 10px;
+    font-size: 9px; font-weight: 600; color: var(--text2);
+    text-transform: uppercase; letter-spacing: .08em;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  tbody td { padding: 7px 10px; border-bottom: 1px solid var(--border); color: var(--text1); }
+  tbody tr:hover td { background: var(--bg2); }
+  .type-tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    color: var(--teal);
+  }
+  .pk  { color: var(--amber); font-family: 'IBM Plex Mono', monospace; font-size: 10px; }
+  .fk  { color: var(--blue);  font-family: 'IBM Plex Mono', monospace; font-size: 10px; }
+  .opt { color: var(--text2); font-size: 10px; }
+
+  /* ── Status / priority badges ── */
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .status-badge {
+    font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ── Code ── */
+  code {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    background: var(--bg3); color: var(--teal);
+    padding: 1px 5px; border-radius: 3px;
+  }
+  pre {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 16px 18px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    color: var(--text1); overflow-x: auto; margin-bottom: 14px;
+    line-height: 1.7;
+  }
+  pre .k  { color: var(--blue);   }
+  pre .s  { color: var(--green);  }
+  pre .c  { color: var(--text2);  }
+  pre .v  { color: var(--amber);  }
+  pre .t  { color: var(--teal);   }
+
+  /* ── Misc ── */
+  .tag {
+    display: inline-block; font-size: 9px; font-weight: 600;
+    padding: 2px 8px; border-radius: 3px;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .tag-green  { background: rgba(120,176,122,.15); color: var(--green);  }
+  .tag-amber  { background: rgba(201,140, 74,.15); color: var(--amber);  }
+  .tag-red    { background: rgba(196, 98, 98,.15); color: var(--red);    }
+  .tag-blue   { background: rgba(104,146,180,.15); color: var(--blue);   }
+  .tag-teal   { background: rgba( 92,168,154,.12); color: var(--teal);   }
+  .tag-purple { background: rgba(155,120,176,.15); color: var(--purple); }
+  .tag-gray   { background: var(--bg3); color: var(--text2); }
+
+  ul, ol { padding-left: 18px; color: var(--text1); margin-bottom: 10px; }
+  li     { margin-bottom: 4px; }
+  li strong { color: var(--text0); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  .info-box {
+    background: var(--bg2); border-left: 2px solid var(--accent);
+    border-radius: 0 5px 5px 0; padding: 12px 16px;
+    font-size: 12px; color: var(--text1); margin-bottom: 14px;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  @media print {
+    nav { display: none; }
+    main { margin-left: 0; padding: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ NAVIGATION ══════════════════ -->
+<nav>
+  <div class="nav-brand">
+    <div class="logo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+      </svg>
+    </div>
+    <div class="app-name">Ticketera</div>
+    <div class="app-sub">Documentación del sistema</div>
+  </div>
+
+  <div class="nav-section-label">General</div>
+  <a href="#overview">Resumen del sistema</a>
+  <a href="#stack">Stack tecnológico</a>
+  <a href="#arquitectura">Arquitectura</a>
+
+  <div class="nav-section-label">Diseño</div>
+  <a href="#paleta">Paleta de colores</a>
+  <a href="#tipografia">Tipografía</a>
+  <a href="#tokens">Tokens de diseño</a>
+
+  <div class="nav-section-label">Backend</div>
+  <a href="#auth">Autenticación</a>
+  <a href="#rutas">Rutas de la API</a>
+  <a href="#schema">Esquema de datos</a>
+  <a href="#sla-engine">Motor SLA</a>
+  <a href="#logging">Logging</a>
+
+  <div class="nav-section-label">Funcionalidades</div>
+  <a href="#inbox">Bandeja de entrada</a>
+  <a href="#tickets">Tickets</a>
+  <a href="#kb">Base de conocimiento</a>
+  <a href="#sla-admin">Reglas SLA</a>
+  <a href="#reportes">Reportes</a>
+  <a href="#admin">Administración</a>
+
+  <div class="nav-section-label">Infra</div>
+  <a href="#deploy">Despliegue</a>
+  <a href="#env">Variables de entorno</a>
+</nav>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main>
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="badge">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      Sistema Ticketera · Equilybrio
+    </div>
+    <h1>Documentación técnica</h1>
+    <p class="subtitle">Referencia completa de arquitectura, diseño, rutas, esquema de datos y funcionalidades del sistema de gestión de tickets.</p>
+    <div class="meta-grid">
+      <div class="meta-item"><div class="label">Versión</div><div class="value">1.0.0</div></div>
+      <div class="meta-item"><div class="label">Fecha</div><div class="value">Abril 2026</div></div>
+      <div class="meta-item"><div class="label">Frontend</div><div class="value">React 18 + Vite</div></div>
+      <div class="meta-item"><div class="label">Backend</div><div class="value">Node.js + Express + Prisma</div></div>
+      <div class="meta-item"><div class="label">Base de datos</div><div class="value">PostgreSQL 16</div></div>
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <section id="overview">
+    <h2>Resumen del sistema</h2>
+    <p>Ticketera es una plataforma interna de gestión de tickets de soporte desarrollada para Equilybrio. Permite registrar, asignar y resolver solicitudes de soporte organizadas en bandejas temáticas, con seguimiento de SLA, base de conocimiento integrada y reportes operacionales.</p>
+    <div class="card-grid three">
+      <div class="card">
+        <h4>Usuarios</h4>
+        <p>3 roles: <strong>Admin</strong>, <strong>Agente</strong> y <strong>Cliente</strong>. Cada rol tiene permisos granulares configurables.</p>
+      </div>
+      <div class="card">
+        <h4>Bandejas</h4>
+        <p>Tickets organizados en 7 bandejas temáticas: IT, Dev, DevOps, Analytics, Finanzas, RRHH y Seguridad.</p>
+      </div>
+      <div class="card">
+        <h4>SLA</h4>
+        <p>Reglas de SLA por prioridad y área. El deadline se calcula automáticamente al crear cada ticket y se puede pausar.</p>
+      </div>
+    </div>
+    <div class="card-grid three">
+      <div class="card">
+        <h4>Conocimiento</h4>
+        <p>Base de artículos con categorías, búsqueda full-text y ABM completo para administradores.</p>
+      </div>
+      <div class="card">
+        <h4>Reportes</h4>
+        <p>Dashboard en tiempo real con KPIs, distribución por bandeja, prioridad y rendimiento por agente.</p>
+      </div>
+      <div class="card">
+        <h4>Logging</h4>
+        <p>Cada request HTTP y acción de negocio queda registrada en stdout con timestamp, color por status y usuario.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STACK ── -->
+  <section id="stack">
+    <h2>Stack tecnológico</h2>
+    <div class="two-col">
+      <div>
+        <h3>Frontend</h3>
+        <table>
+          <thead><tr><th>Paquete</th><th>Versión</th><th>Rol</th></tr></thead>
+          <tbody>
+            <tr><td>React</td><td class="type-tag">18.3.1</td><td>UI framework</td></tr>
+            <tr><td>Vite</td><td class="type-tag">5.4.10</td><td>Build tool / dev server</td></tr>
+            <tr><td>Tailwind CSS</td><td class="type-tag">3.4.14</td><td>Utilidades CSS (config)</td></tr>
+            <tr><td>Inter</td><td class="type-tag">Google Fonts</td><td>Tipografía principal</td></tr>
+            <tr><td>IBM Plex Mono</td><td class="type-tag">Google Fonts</td><td>Tipografía monoespaciada</td></tr>
+          </tbody>
+        </table>
+        <div class="info-box">El frontend <strong>no usa librerías de componentes externas</strong>. Todo el sistema de diseño está construido con estilos inline sobre tokens CSS.</div>
+      </div>
+      <div>
+        <h3>Backend</h3>
+        <table>
+          <thead><tr><th>Paquete</th><th>Versión</th><th>Rol</th></tr></thead>
+          <tbody>
+            <tr><td>Express</td><td class="type-tag">4.19.2</td><td>Framework HTTP</td></tr>
+            <tr><td>Prisma ORM</td><td class="type-tag">5.14.0</td><td>Acceso a base de datos</td></tr>
+            <tr><td>PostgreSQL</td><td class="type-tag">16</td><td>Base de datos relacional</td></tr>
+            <tr><td>jsonwebtoken</td><td class="type-tag">9.0.2</td><td>Autenticación JWT</td></tr>
+            <tr><td>bcryptjs</td><td class="type-tag">2.4.3</td><td>Hash de contraseñas</td></tr>
+            <tr><td>helmet</td><td class="type-tag">7.1.0</td><td>Headers de seguridad</td></tr>
+            <tr><td>cors</td><td class="type-tag">2.8.5</td><td>CORS middleware</td></tr>
+            <tr><td>dotenv</td><td class="type-tag">16.4.5</td><td>Variables de entorno</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ARQUITECTURA ── -->
+  <section id="arquitectura">
+    <h2>Arquitectura</h2>
+    <pre>
+┌─────────────────────────────────────────────────────────────┐
+│  <span class="t">CLIENTE (Browser)</span>                                          │
+│  React 18 · Vite · Puerto 5173 (dev) / Puerto 80 (prod)     │
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │ AuthCtx  │  │ AdminCtx │  │ThemeCtx  │  │  Pages   │   │
+│  │ JWT +    │  │ queues / │  │dark/light│  │ Inbox    │   │
+│  │ session  │  │ users /  │  │  toggle  │  │ Tickets  │   │
+│  │ Storage  │  │ roles    │  └──────────┘  │ KB · SLA │   │
+│  └──────────┘  └──────────┘                │ Reports  │   │
+└────────────────────────────┬────────────────────────────────┘
+                             │ HTTP/JSON  Bearer JWT
+                             │ /api/*
+┌────────────────────────────▼────────────────────────────────┐
+│  <span class="t">BACKEND (Node.js Express)</span>  · Puerto 3000                   │
+│                                                             │
+│  requestLogger → helmet → cors → express.json              │
+│                                                             │
+│  /api/auth      /api/tickets   /api/queues   /api/users     │
+│  /api/roles     /api/kb        /api/sla-rules /api/reports  │
+│                                                             │
+│  requireAuth (JWT)  →  requireRole / requireAdmin           │
+└────────────────────────────┬────────────────────────────────┘
+                             │ Prisma Client
+┌────────────────────────────▼────────────────────────────────┐
+│  <span class="t">PostgreSQL 16</span>  · Puerto 5432                              │
+│                                                             │
+│  users · roles · role_permissions · queues · tickets        │
+│  ticket_tags · ticket_history · sla_rules · kb_articles     │
+│  counters                                                   │
+└─────────────────────────────────────────────────────────────┘</pre>
+
+    <h3>Estructura de directorios</h3>
+    <div class="two-col">
+      <div>
+        <h4>Frontend <code>src/</code></h4>
+        <pre>
+pages/          Vistas principales
+components/
+  layout/       Sidebar, TopBar
+  ui/           Avatar, Badge, Icon, Dot…
+  ticket/       HistoryEntry, PanelSection
+  forms/        FormField
+context/        Auth, Admin, Theme
+services/       api.js (fetch wrapper)
+utils/          sla.js, time.js
+styles/         tokens.js, index.css
+constants/      index.js, sla.js, kb.js</pre>
+      </div>
+      <div>
+        <h4>Backend <code>src/</code></h4>
+        <pre>
+routes/
+  auth.js       Login / me
+  tickets.js    CRUD tickets + acciones
+  queues.js     ABM bandejas
+  users.js      ABM usuarios
+  roles.js      ABM roles + permisos
+  kb.js         ABM artículos KB
+  sla.js        ABM reglas SLA
+  reports.js    Métricas en tiempo real
+middleware/
+  auth.js       requireAuth, requireRole
+  logger.js     requestLogger, actionLogger
+  errorHandler.js
+config/
+  db.js         Prisma client + contadores</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PALETA ── -->
+  <section id="paleta">
+    <h2>Paleta de colores</h2>
+    <p>El sistema usa dos temas (oscuro y claro) con las mismas variables CSS. El color de acento <strong>naranja tostado</strong> es idéntico en ambos temas; los demás colores se ajustan en luminosidad.</p>
+
+    <h3>Colores de interfaz</h3>
+    <div class="swatch-group">
+      <div class="swatch"><div class="dot" style="background:#cf7452"></div><div class="name">--accent</div><div class="hex">#CF7452</div></div>
+      <div class="swatch"><div class="dot" style="background:#b86040"></div><div class="name">--accentD</div><div class="hex">#B86040</div></div>
+      <div class="swatch"><div class="dot" style="background:#d98b6a"></div><div class="name">--accentL</div><div class="hex">#D98B6A</div></div>
+      <div class="swatch"><div class="dot" style="background:#78b07a"></div><div class="name">--green</div><div class="hex">#78B07A</div></div>
+      <div class="swatch"><div class="dot" style="background:#c98c4a"></div><div class="name">--amber</div><div class="hex">#C98C4A</div></div>
+      <div class="swatch"><div class="dot" style="background:#c46262"></div><div class="name">--red</div><div class="hex">#C46262</div></div>
+      <div class="swatch"><div class="dot" style="background:#6892b4"></div><div class="name">--blue</div><div class="hex">#6892B4</div></div>
+      <div class="swatch"><div class="dot" style="background:#5ca89a"></div><div class="name">--teal</div><div class="hex">#5CA89A</div></div>
+      <div class="swatch"><div class="dot" style="background:#9b78b0"></div><div class="name">--purple</div><div class="hex">#9B78B0</div></div>
+    </div>
+
+    <h3>Fondos — tema oscuro</h3>
+    <div class="swatch-group">
+      <div class="swatch"><div class="dot" style="background:#191919;border-color:#424242"></div><div class="name">--bg0</div><div class="hex">#191919</div></div>
+      <div class="swatch"><div class="dot" style="background:#1f1f1f;border-color:#424242"></div><div class="name">--bg1</div><div class="hex">#1F1F1F</div></div>
+      <div class="swatch"><div class="dot" style="background:#252525;border-color:#424242"></div><div class="name">--bg2</div><div class="hex">#252525</div></div>
+      <div class="swatch"><div class="dot" style="background:#2d2d2d;border-color:#424242"></div><div class="name">--bg3</div><div class="hex">#2D2D2D</div></div>
+      <div class="swatch"><div class="dot" style="background:#313131;border-color:#424242"></div><div class="name">--border</div><div class="hex">#313131</div></div>
+    </div>
+
+    <h3>Fondos — tema claro</h3>
+    <div class="swatch-group">
+      <div class="swatch"><div class="dot" style="background:#f7f4f0;border-color:#ccc"></div><div class="name">--bg0</div><div class="hex">#F7F4F0</div></div>
+      <div class="swatch"><div class="dot" style="background:#f0ebe6;border-color:#ccc"></div><div class="name">--bg1</div><div class="hex">#F0EBE6</div></div>
+      <div class="swatch"><div class="dot" style="background:#e9e3dc;border-color:#ccc"></div><div class="name">--bg2</div><div class="hex">#E9E3DC</div></div>
+      <div class="swatch"><div class="dot" style="background:#e0d8cf;border-color:#ccc"></div><div class="name">--bg3</div><div class="hex">#E0D8CF</div></div>
+      <div class="swatch"><div class="dot" style="background:#d4cbc0;border-color:#ccc"></div><div class="name">--border</div><div class="hex">#D4CBC0</div></div>
+    </div>
+
+    <h3>Uso semántico de colores</h3>
+    <table>
+      <thead><tr><th>Token</th><th>Uso</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td><code>--accent</code></td><td>Acción principal, links activos, énfasis</td><td><span class="tag tag-amber">naranja tostado</span></td></tr>
+        <tr><td><code>--green</code></td><td>Éxito, SLA cumplido, resuelto</td><td><span class="tag tag-green">resuelto</span></td></tr>
+        <tr><td><code>--amber</code></td><td>Advertencia, pendiente, pausado</td><td><span class="tag tag-amber">pendiente</span></td></tr>
+        <tr><td><code>--red</code></td><td>Error, SLA vencido, urgente</td><td><span class="tag tag-red">urgente</span></td></tr>
+        <tr><td><code>--blue</code></td><td>Info, tickets nuevos</td><td><span class="tag tag-blue">nuevo</span></td></tr>
+        <tr><td><code>--teal</code></td><td>Movimientos de bandeja</td><td><span class="tag tag-teal">movido</span></td></tr>
+        <tr><td><code>--purple</code></td><td>Rol admin, permisos</td><td><span class="tag tag-purple">admin</span></td></tr>
+        <tr><td><code>--text2</code></td><td>Cerrado, sin datos, pausado</td><td><span class="tag tag-gray">cerrado</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── TIPOGRAFÍA ── -->
+  <section id="tipografia">
+    <h2>Tipografía</h2>
+    <div class="two-col">
+      <div class="card">
+        <h4>Inter (sans-serif)</h4>
+        <p>Tipografía principal para toda la interfaz. Se usa en pesos 300, 400, 500 y 600. Tamaños van desde 9px (labels) hasta 22px (valores KPI).</p>
+        <p style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-top:10px;">Label uppercase</p>
+        <p style="font-size:11px;color:var(--text1);">Texto secundario — 11px</p>
+        <p style="font-size:12px;color:var(--text0);">Texto normal — 12px</p>
+        <p style="font-size:14px;font-weight:500;color:var(--text0);">Título vista — 14px 500</p>
+        <p style="font-size:22px;font-weight:600;color:var(--text0);">KPI 22px</p>
+      </div>
+      <div class="card">
+        <h4>IBM Plex Mono (monospace)</h4>
+        <p>Usada para IDs de tickets, IDs de artículos KB, valores técnicos y resaltado de código. Pesos 400 y 500.</p>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);margin-top:10px;">TK-0001</p>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--teal);">KB-0005</p>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);">GET · POST · PATCH</p>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text1);">2026-04-30 14:22:01</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TOKENS ── -->
+  <section id="tokens">
+    <h2>Tokens de diseño</h2>
+    <p>Los tokens se exportan desde <code>src/styles/tokens.js</code> como el objeto <code>C</code> y el objeto de estilos de input <code>iS</code>, usados en todos los estilos inline del sistema.</p>
+    <pre>
+<span class="c">// tokens.js — referenciados como C.bg0, C.accent, etc.</span>
+<span class="k">export const</span> C = {
+  bg0: <span class="s">'var(--bg0)'</span>,   bg1: <span class="s">'var(--bg1)'</span>,
+  bg2: <span class="s">'var(--bg2)'</span>,   bg3: <span class="s">'var(--bg3)'</span>,
+  border: <span class="s">'var(--border)'</span>,
+  accent: <span class="s">'var(--accent)'</span>,  accentMuted: <span class="s">'var(--accentMuted)'</span>,
+  green: <span class="s">'var(--green)'</span>,   amber: <span class="s">'var(--amber)'</span>,
+  red: <span class="s">'var(--red)'</span>,     blue: <span class="s">'var(--blue)'</span>,
+  text0: <span class="s">'var(--text0)'</span>,  text1: <span class="s">'var(--text1)'</span>,  text2: <span class="s">'var(--text2)'</span>,
+};
+
+<span class="k">export const</span> iS = {
+  width: <span class="s">'100%'</span>, background: C.bg0, border: <span class="s">`1px solid ${C.border}`</span>,
+  color: C.text0, fontSize: <span class="v">12</span>, padding: <span class="s">'6px 10px'</span>, borderRadius: <span class="v">4</span>,
+  outline: <span class="s">'none'</span>,
+};</pre>
+  </section>
+
+  <!-- ── AUTH ── -->
+  <section id="auth">
+    <h2>Autenticación</h2>
+    <p>El sistema usa <strong>JWT (JSON Web Tokens)</strong> con expiración configurable (por defecto 8h). El token se almacena en <code>sessionStorage</code> bajo la clave <code>ticketera_session</code>.</p>
+
+    <h3>Flujo de login</h3>
+    <pre>
+<span class="c">1. Cliente → POST /api/auth/login  { email, password }</span>
+<span class="c">2. Backend verifica password con bcryptjs</span>
+<span class="c">3. Backend responde { token: "JWT...", user: { id, name, email, role, role_label } }</span>
+<span class="c">4. Frontend guarda en sessionStorage</span>
+<span class="c">5. Cada request incluye:  Authorization: Bearer &lt;token&gt;</span></pre>
+
+    <h3>Roles y permisos</h3>
+    <table>
+      <thead><tr><th>Rol</th><th>Acceso</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-purple">admin</span></td>
+          <td>Acceso total. Puede gestionar usuarios, roles, bandejas, reglas SLA, artículos KB y ver reportes. Puede asignar tickets y cambiar cualquier campo.</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">agent</span></td>
+          <td>Puede ver todos los tickets, actualizarlos, moverlos, asignarlos y pausar el SLA. No puede gestionar usuarios, roles ni configuración del sistema.</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-teal">customer</span></td>
+          <td>Solo puede ver y crear sus propios tickets. Accede a artículos KB publicados. No ve otras bandejas ni reportes.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Permisos granulares (roles)</h3>
+    <div class="badge-row">
+      <span class="tag tag-gray">viewAllQueues</span>
+      <span class="tag tag-gray">manageTickets</span>
+      <span class="tag tag-gray">manageQueues</span>
+      <span class="tag tag-gray">manageUsers</span>
+      <span class="tag tag-gray">manageRoles</span>
+      <span class="tag tag-gray">viewReports</span>
+      <span class="tag tag-gray">manageSLA</span>
+      <span class="tag tag-gray">viewKB</span>
+      <span class="tag tag-gray">manageKB</span>
+      <span class="tag tag-gray">accessAdmin</span>
+    </div>
+  </section>
+
+  <!-- ── RUTAS ── -->
+  <section id="rutas">
+    <h2>Rutas de la API</h2>
+    <p>Base URL: <code>http://localhost:3000/api</code>. Todos los endpoints excepto <code>/auth/login</code> requieren <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+
+    <h3>Autenticación <code>/api/auth</code></h3>
+    <div class="card route-block">
+      <div class="route-row">
+        <span class="method POST">POST</span>
+        <div><div class="route-path">/auth/login</div><div class="route-desc">Autenticar usuario. Devuelve JWT + datos del usuario.</div></div>
+        <span class="route-auth auth-public">público</span>
+      </div>
+      <div class="route-row">
+        <span class="method GET">GET</span>
+        <div><div class="route-path">/auth/me</div><div class="route-desc">Devuelve el usuario autenticado actual.</div></div>
+        <span class="route-auth auth-any">any</span>
+      </div>
+    </div>
+
+    <h3>Tickets <code>/api/tickets</code></h3>
+    <div class="card route-block">
+      <div class="route-row">
+        <span class="method GET">GET</span>
+        <div><div class="route-path">/tickets</div><div class="route-desc">Listar tickets. Filtros: <code>status</code>, <code>queue</code>, <code>assignee</code>, <code>priority</code>, <code>search</code>, <code>page</code>, <code>limit</code>. Clientes solo ven sus propios tickets.</div></div>
+        <span class="route-auth auth-any">any</span>
+      </div>
+      <div class="route-row">
+        <span class="method GET">GET</span>
+        <div><div class="route-path">/tickets/:id</div><div class="route-desc">Obtener ticket con historial completo.</div></div>
+        <span class="route-auth auth-any">any</span>
+      </div>
+      <div class="route-row">
+        <span class="method POST">POST</span>
+        <div><div class="route-path">/tickets</div><div class="route-desc">Crear ticket. Calcula SLA deadline automáticamente según reglas activas. Body: <code>title</code>, <code>queue_id</code>, <code>priority</code>, <code>category</code>, <code>description</code>, <code>tags[]</code>, <code>dept</code>.</div></div>
+        <span class="route-auth auth-any">any</span>
+      </div>
+      <div class="route-row">
+        <span class="method POST">POST</span>
+        <div><div class="route-path">/tickets/:id/update</div><div class="route-desc">Agregar comentario y/o cambiar estado. Maneja pausa y reanudación del SLA automáticamente.</div></div>
+        <span class="route-auth auth-agent">agent+</span>
+      </div>
+      <div class="route-row">
+        <span class="method POST">POST</span>
+        <div><div class="route-path">/tickets/:id/move</div><div class="route-desc">Mover ticket a otra bandeja. Body: <code>queue_id</code>, <code>note</code>.</div></div>
+        <span class="route-auth auth-agent">agent+</span>
+      </div>
+      <div class="route-row">
+        <span class="method PATCH">PATCH</span>
+        <div><div class="route-path">/tickets/:id</div><div class="route-desc">Actualizar campos: <code>assignee_id</code>, <code>priority</code>, <code>dept</code>, <code>category</code>, <code>sla_deadline</code>. Al asignar por <code>assignee_id</code> sincroniza <code>assignee_name</code> y crea entrada de historial.</div></div>
+        <span class="route-auth auth-agent">agent+</span>
+      </div>
+    </div>
+
+    <h3>Bandejas <code>/api/queues</code></h3>
+    <div class="card route-block">
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/queues</div><div class="route-desc">Listar bandejas activas.</div></div><span class="route-auth auth-any">any</span></div>
+      <div class="route-row"><span class="method POST">POST</span><div><div class="route-path">/queues</div><div class="route-desc">Crear bandeja. Body: <code>id</code>, <code>name</code>, <code>color</code>, <code>owner_name</code>.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/queues/:id</div><div class="route-desc">Actualizar bandeja.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/queues/:id/toggle</div><div class="route-desc">Activar / desactivar bandeja.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method DELETE">DELETE</span><div><div class="route-path">/queues/:id</div><div class="route-desc">Eliminar bandeja.</div></div><span class="route-auth auth-admin">admin</span></div>
+    </div>
+
+    <h3>Usuarios <code>/api/users</code></h3>
+    <div class="card route-block">
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/users</div><div class="route-desc">Listar usuarios. Filtros: <code>role</code>, <code>search</code>. Accesible por agentes y admins (lectura para el selector de asignación).</div></div><span class="route-auth auth-agent">agent+</span></div>
+      <div class="route-row"><span class="method POST">POST</span><div><div class="route-path">/users</div><div class="route-desc">Crear usuario. Contraseña por defecto: <code>equilybrio2026</code>. Rol por defecto: <code>agent</code>.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/users/:id</div><div class="route-desc">Actualizar nombre, email, rol o contraseña.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/users/:id/toggle</div><div class="route-desc">Activar / desactivar usuario. No permite desactivarse a uno mismo.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method DELETE">DELETE</span><div><div class="route-path">/users/:id</div><div class="route-desc">Eliminar usuario. No permite eliminarse a uno mismo.</div></div><span class="route-auth auth-admin">admin</span></div>
+    </div>
+
+    <h3>Roles <code>/api/roles</code></h3>
+    <div class="card route-block">
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/roles</div><div class="route-desc">Listar roles con sus permisos.</div></div><span class="route-auth auth-any">any</span></div>
+      <div class="route-row"><span class="method POST">POST</span><div><div class="route-path">/roles</div><div class="route-desc">Crear rol con permisos.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/roles/:id</div><div class="route-desc">Actualizar rol y permisos.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method DELETE">DELETE</span><div><div class="route-path">/roles/:id</div><div class="route-desc">Eliminar rol (solo roles editables).</div></div><span class="route-auth auth-admin">admin</span></div>
+    </div>
+
+    <h3>Base de conocimiento <code>/api/kb</code></h3>
+    <div class="card route-block">
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/kb</div><div class="route-desc">Listar artículos. Clientes solo ven publicados. Filtros: <code>cat</code>, <code>search</code>, <code>status</code>.</div></div><span class="route-auth auth-any">any</span></div>
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/kb/:id</div><div class="route-desc">Obtener artículo. Incrementa el contador de vistas.</div></div><span class="route-auth auth-any">any</span></div>
+      <div class="route-row"><span class="method POST">POST</span><div><div class="route-path">/kb</div><div class="route-desc">Crear artículo. Body: <code>title</code>, <code>cat</code>, <code>content</code>, <code>status</code> (draft/published).</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/kb/:id</div><div class="route-desc">Actualizar artículo.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method DELETE">DELETE</span><div><div class="route-path">/kb/:id</div><div class="route-desc">Eliminar artículo.</div></div><span class="route-auth auth-admin">admin</span></div>
+    </div>
+
+    <h3>Reglas SLA <code>/api/sla-rules</code></h3>
+    <div class="card route-block">
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/sla-rules</div><div class="route-desc">Listar reglas SLA.</div></div><span class="route-auth auth-agent">agent+</span></div>
+      <div class="route-row"><span class="method POST">POST</span><div><div class="route-path">/sla-rules</div><div class="route-desc">Crear regla. Body: <code>name</code>, <code>priority</code>, <code>dept</code>, <code>r1</code>, <code>res</code>, <code>esc</code>.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/sla-rules/:id</div><div class="route-desc">Actualizar regla.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method PATCH">PATCH</span><div><div class="route-path">/sla-rules/:id/toggle</div><div class="route-desc">Activar / desactivar regla.</div></div><span class="route-auth auth-admin">admin</span></div>
+      <div class="route-row"><span class="method DELETE">DELETE</span><div><div class="route-path">/sla-rules/:id</div><div class="route-desc">Eliminar regla.</div></div><span class="route-auth auth-admin">admin</span></div>
+    </div>
+
+    <h3>Reportes <code>/api/reports</code></h3>
+    <div class="card route-block">
+      <div class="route-row">
+        <span class="method GET">GET</span>
+        <div><div class="route-path">/reports?month=2026-04</div><div class="route-desc">KPIs del mes: total, resueltos, tasa, SLA vencidos, sin asignar. Distribución por bandeja, prioridad y agente. Parámetro <code>month</code> opcional (default: mes actual).</div></div>
+        <span class="route-auth auth-agent">agent+</span>
+      </div>
+    </div>
+
+    <h3>Salud</h3>
+    <div class="card route-block">
+      <div class="route-row"><span class="method GET">GET</span><div><div class="route-path">/health</div><div class="route-desc">Estado del servidor. Devuelve <code>{ status: "ok", ts: "..." }</code>.</div></div><span class="route-auth auth-public">público</span></div>
+    </div>
+  </section>
+
+  <!-- ── SCHEMA ── -->
+  <section id="schema">
+    <h2>Esquema de datos</h2>
+
+    <h3>tickets</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Tipo</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pk">id</span></td><td class="type-tag">TEXT PK</td><td>nextTicketId()</td><td>Formato <code>TK-NNNN</code>, generado por el backend.</td></tr>
+        <tr><td>title</td><td class="type-tag">TEXT</td><td></td><td>Asunto del ticket.</td></tr>
+        <tr><td>requester_name</td><td class="type-tag">TEXT</td><td></td><td>Nombre del solicitante (tomado del JWT al crear).</td></tr>
+        <tr><td>requester_email</td><td class="type-tag">TEXT</td><td></td><td>Email del solicitante.</td></tr>
+        <tr><td>assignee_name</td><td class="type-tag">TEXT?</td><td>NULL</td><td>Nombre del agente asignado. Sincronizado con <code>assignee_id</code>.</td></tr>
+        <tr><td><span class="fk">assignee_id</span></td><td class="type-tag">INT? FK</td><td>NULL</td><td>FK a <code>users.id</code>. Se actualiza junto a <code>assignee_name</code>.</td></tr>
+        <tr><td><span class="fk">queue_id</span></td><td class="type-tag">TEXT FK</td><td></td><td>FK a <code>queues.id</code>.</td></tr>
+        <tr><td>dept</td><td class="type-tag">TEXT?</td><td>NULL</td><td>Área/departamento.</td></tr>
+        <tr><td>category</td><td class="type-tag">TEXT?</td><td>NULL</td><td>Categoría del problema.</td></tr>
+        <tr><td>status</td><td class="type-tag">TEXT</td><td>new</td><td><code>new</code> · <code>open</code> · <code>pending</code> · <code>paused</code> · <code>resolved</code> · <code>closed</code></td></tr>
+        <tr><td>priority</td><td class="type-tag">TEXT</td><td>medium</td><td><code>urgent</code> · <code>high</code> · <code>medium</code> · <code>low</code></td></tr>
+        <tr><td>sla_deadline</td><td class="type-tag">TEXT?</td><td>NULL</td><td>ISO datetime. Calculado al crear según regla SLA activa. Se extiende al reanudar pausa.</td></tr>
+        <tr><td>sla_paused_at</td><td class="type-tag">TIMESTAMPTZ?</td><td>NULL</td><td>Momento de la pausa. Se limpia al reanudar.</td></tr>
+        <tr><td>created_at</td><td class="type-tag">TIMESTAMPTZ</td><td>now()</td><td></td></tr>
+        <tr><td>updated_at</td><td class="type-tag">TIMESTAMPTZ</td><td>auto</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h3>ticket_history</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pk">id</span></td><td class="type-tag">SERIAL PK</td><td></td></tr>
+        <tr><td><span class="fk">ticket_id</span></td><td class="type-tag">TEXT FK</td><td>FK a <code>tickets.id</code> con CASCADE DELETE.</td></tr>
+        <tr><td>type</td><td class="type-tag">TEXT</td><td><code>created</code> · <code>status_change</code> · <code>queue_move</code> · <code>assign</code> · <code>comment</code></td></tr>
+        <tr><td>from_val</td><td class="type-tag">TEXT</td><td>Valor anterior (status, queue_id, nombre de agente).</td></tr>
+        <tr><td>to_val</td><td class="type-tag">TEXT</td><td>Valor nuevo.</td></tr>
+        <tr><td>comment</td><td class="type-tag">TEXT</td><td>Texto del comentario.</td></tr>
+        <tr><td>category</td><td class="type-tag">TEXT</td><td>Categoría de la actualización.</td></tr>
+        <tr><td>agent_name</td><td class="type-tag">TEXT</td><td>Nombre del agente que realizó la acción.</td></tr>
+        <tr><td>created_at</td><td class="type-tag">TIMESTAMPTZ</td><td>auto now()</td></tr>
+      </tbody>
+    </table>
+
+    <h3>sla_rules</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pk">id</span></td><td class="type-tag">SERIAL PK</td><td></td></tr>
+        <tr><td>name</td><td class="type-tag">TEXT</td><td>Nombre descriptivo.</td></tr>
+        <tr><td>priority</td><td class="type-tag">TEXT</td><td><code>urgent</code> · <code>high</code> · <code>medium</code> · <code>low</code></td></tr>
+        <tr><td>dept</td><td class="type-tag">TEXT</td><td><code>"all"</code> o nombre de área. Las reglas específicas tienen prioridad sobre <code>"all"</code>.</td></tr>
+        <tr><td>r1</td><td class="type-tag">TEXT?</td><td>Tiempo de primera respuesta. Formato: <code>1h</code>, <code>30m</code>.</td></tr>
+        <tr><td>res</td><td class="type-tag">TEXT?</td><td>Tiempo de resolución. Usado para calcular <code>sla_deadline</code>.</td></tr>
+        <tr><td>esc</td><td class="type-tag">TEXT?</td><td>Tiempo de escalación.</td></tr>
+        <tr><td>active</td><td class="type-tag">BOOLEAN</td><td>true</td></tr>
+      </tbody>
+    </table>
+
+    <h3>kb_articles</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pk">id</span></td><td class="type-tag">TEXT PK</td><td>Formato <code>KB-NNNN</code>.</td></tr>
+        <tr><td>title</td><td class="type-tag">TEXT</td><td>Título del artículo.</td></tr>
+        <tr><td>cat</td><td class="type-tag">TEXT?</td><td>Categoría.</td></tr>
+        <tr><td>content</td><td class="type-tag">TEXT</td><td>Contenido completo (texto plano con saltos de línea).</td></tr>
+        <tr><td>views</td><td class="type-tag">INT</td><td>Contador de vistas. Incrementa al leer.</td></tr>
+        <tr><td>status</td><td class="type-tag">TEXT</td><td><code>draft</code> (solo admin/agente) · <code>published</code> (todos).</td></tr>
+        <tr><td>created_at / updated_at</td><td class="type-tag">TIMESTAMPTZ</td><td>auto</td></tr>
+      </tbody>
+    </table>
+
+    <h3>users · roles · role_permissions · queues · ticket_tags · counters</h3>
+    <div class="card">
+      <p><strong>users</strong>: <code>id</code> (int PK) · <code>name</code> · <code>email</code> (unique) · <code>password_hash</code> · <code>role_id</code> FK · <code>active</code> · timestamps</p>
+      <p><strong>roles</strong>: <code>id</code> (text PK) · <code>label</code> · <code>description</code> · <code>color</code> · <code>editable</code></p>
+      <p><strong>role_permissions</strong>: <code>(role_id, permission_id)</code> PK compuesto · <code>enabled</code></p>
+      <p><strong>queues</strong>: <code>id</code> (text PK) · <code>name</code> · <code>owner_name</code> · <code>color</code> · <code>active</code> · timestamps</p>
+      <p><strong>ticket_tags</strong>: <code>(ticket_id, tag)</code> PK compuesto · CASCADE DELETE</p>
+      <p><strong>counters</strong>: <code>key</code> (text PK) · <code>value</code> (int) — mantiene los contadores autoincrement de IDs (<code>ticket</code>, <code>kb</code>)</p>
+    </div>
+  </section>
+
+  <!-- ── SLA ENGINE ── -->
+  <section id="sla-engine">
+    <h2>Motor SLA</h2>
+
+    <h3>Cálculo automático al crear</h3>
+    <p>Al crear un ticket, el backend busca la regla SLA activa más específica para esa combinación de <code>priority</code> + <code>dept</code>. Las reglas de departamento específico tienen prioridad sobre las reglas <code>"all"</code>.</p>
+    <pre>
+<span class="c">// Lógica de selección de regla</span>
+<span class="k">const</span> rules = <span class="k">await</span> prisma.slaRule.findMany({ where: { priority, active: <span class="v">true</span> } });
+<span class="k">const</span> rule  = rules.find(r =&gt; dept &amp;&amp; r.dept === dept) || rules.find(r =&gt; r.dept === <span class="s">'all'</span>);
+<span class="k">const</span> mins  = parseSlaMinutes(rule?.res);  <span class="c">// "4h" → 240, "30m" → 30</span>
+<span class="k">if</span> (mins) deadline = <span class="k">new</span> Date(Date.now() + mins * <span class="v">60000</span>).toISOString();</pre>
+
+    <h3>Estados y colores del SLA</h3>
+    <table>
+      <thead><tr><th>Condición</th><th>Color</th><th>Etiqueta ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Resuelto / Cerrado</td><td><span class="tag tag-green">verde</span></td><td>Cumplido</td></tr>
+        <tr><td>Pausado</td><td><span class="tag tag-gray">gris</span></td><td>Pausado · 2h 15m</td></tr>
+        <tr><td>Vencido o &lt; 60 min</td><td><span class="tag tag-red">rojo</span></td><td>Vencido 1h 20m / 45m restantes</td></tr>
+        <tr><td>60–180 min restantes</td><td><span class="tag tag-amber">ámbar</span></td><td>2h 5m restantes</td></tr>
+        <tr><td>&gt; 180 min restantes</td><td><span class="tag tag-gray">neutro</span></td><td>3d 4h restantes</td></tr>
+        <tr><td>Sin deadline</td><td><span class="tag tag-gray">—</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Pausa y reanudación</h3>
+    <p>Al cambiar el estado a <code>paused</code> se guarda el timestamp en <code>sla_paused_at</code>. Al reanudar (cualquier otro estado), el backend calcula la duración de la pausa y extiende <code>sla_deadline</code> en ese mismo tiempo. El reloj continúa exactamente donde se detuvo.</p>
+    <pre>
+<span class="c">// Al pausar</span>
+ticketData.sla_paused_at = <span class="k">new</span> Date();
+
+<span class="c">// Al reanudar</span>
+<span class="k">const</span> pausedMs    = Date.now() - <span class="k">new</span> Date(existing.sla_paused_at).getTime();
+<span class="k">const</span> newDeadline = <span class="k">new</span> Date(<span class="k">new</span> Date(existing.sla_deadline).getTime() + pausedMs);
+ticketData.sla_deadline  = newDeadline.toISOString();
+ticketData.sla_paused_at = <span class="v">null</span>;</pre>
+
+    <h3>Reglas SLA predeterminadas</h3>
+    <table>
+      <thead><tr><th>Nombre</th><th>Prioridad</th><th>Área</th><th>1ª Resp.</th><th>Resolución</th><th>Escalación</th></tr></thead>
+      <tbody>
+        <tr><td>Urgente — crítico</td><td><span class="tag tag-red">urgent</span></td><td>all</td><td>1h</td><td>4h</td><td>2h</td></tr>
+        <tr><td>Alta prioridad</td><td><span class="tag tag-amber">high</span></td><td>all</td><td>4h</td><td>8h</td><td>6h</td></tr>
+        <tr><td>Media prioridad</td><td><span class="tag tag-blue">medium</span></td><td>all</td><td>8h</td><td>24h</td><td>16h</td></tr>
+        <tr><td>Baja prioridad</td><td><span class="tag tag-gray">low</span></td><td>all</td><td>24h</td><td>72h</td><td>48h</td></tr>
+        <tr><td>Bug producción</td><td><span class="tag tag-red">urgent</span></td><td>Dev</td><td>30m</td><td>2h</td><td>1h</td></tr>
+        <tr><td>Onboarding RRHH</td><td><span class="tag tag-blue">medium</span></td><td>HR</td><td>4h</td><td>48h</td><td>24h</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── LOGGING ── -->
+  <section id="logging">
+    <h2>Logging</h2>
+    <p>El sistema loguea a <code>stdout</code> / <code>stderr</code>, que Docker captura automáticamente. Para ver los logs en vivo:</p>
+    <pre>docker compose logs -f backend</pre>
+
+    <h3>Formato de request log</h3>
+    <pre>
+2026-04-30 14:22:01  <span class="k">200</span>  POST   /api/tickets            [Camilo Reyes]  47ms
+2026-04-30 14:22:03  <span class="k">200</span>  GET    /api/tickets?limit=500  [Patricia Lara]  34ms
+2026-04-30 14:23:10  <span class="v">401</span>  GET    /api/users                              8ms</pre>
+
+    <h3>Acciones de negocio</h3>
+    <pre>
+2026-04-30 14:22:15  <span class="t">ACT</span>  TICKET_CREATED   TK-0042 "VPN caída BUE" [urgent] por Camilo Reyes
+2026-04-30 14:23:10  <span class="t">ACT</span>  ASSIGNED         TK-0042 → Ana Ríos por Patricia Lara
+2026-04-30 14:25:44  <span class="t">ACT</span>  STATUS_CHANGE    TK-0042 open → resolved por Ana Ríos
+2026-04-30 14:30:00  <span class="t">ACT</span>  SLA_PAUSED       TK-0043 por Luis Herrera
+2026-04-30 15:15:00  <span class="t">ACT</span>  SLA_RESUMED      TK-0043 deadline → 2026-05-01T10:30Z (+45m) por Luis Herrera
+2026-04-30 16:00:00  <span class="t">ACT</span>  QUEUE_MOVE       TK-0044 it → dev por Patricia Lara</pre>
+
+    <p>Los errores 500 se escriben a <code>stderr</code> con el stack trace completo y contexto del request.</p>
+    <p>Los requests a <code>/api/health</code> no se loguean para reducir el ruido.</p>
+  </section>
+
+  <!-- ── FUNCIONALIDADES ── -->
+
+  <section id="inbox">
+    <h2>Bandeja de entrada</h2>
+    <p>Vista principal del sistema. Muestra todos los tickets en una grilla con las columnas ID, Asunto, Solicitante, Bandeja, Prioridad, Estado y SLA.</p>
+    <h3>Vistas de contexto</h3>
+    <ul>
+      <li><strong>Todas</strong> — todos los tickets del sistema (admin/agente)</li>
+      <li><strong>Mis tickets</strong> — tickets asignados al usuario actual</li>
+      <li><strong>Sin asignar</strong> — tickets sin agente asignado</li>
+      <li><strong>Por bandeja</strong> — tickets de una bandeja específica</li>
+    </ul>
+    <h3>Filtros disponibles</h3>
+    <ul>
+      <li>Búsqueda por título, ID o nombre del solicitante</li>
+      <li>Estado: Nuevo · Abierto · Pendiente · Resuelto (sin Cerrados por defecto)</li>
+      <li>Responsable (solo admin ve dropdown con todos los agentes)</li>
+      <li><strong>Toggle "Archivados"</strong>: muestra exclusivamente tickets con estado <code>closed</code></li>
+    </ul>
+    <h3>Stats bar (admin/agente)</h3>
+    <div class="badge-row">
+      <span class="tag tag-gray">Activos</span>
+      <span class="tag tag-red">Urgentes</span>
+      <span class="tag tag-amber">SLA vencidos</span>
+      <span class="tag tag-gray">Sin asignar</span>
+    </div>
+    <p>Los tickets pausados no cuentan como "SLA vencidos" en las stats.</p>
+  </section>
+
+  <section id="tickets">
+    <h2>Tickets</h2>
+    <h3>Estados del ciclo de vida</h3>
+    <div class="badge-row">
+      <span class="status-badge" style="color:var(--blue)">Nuevo</span>
+      <span class="status-badge" style="color:var(--accent)">Abierto</span>
+      <span class="status-badge" style="color:var(--amber)">Pendiente</span>
+      <span class="status-badge" style="color:var(--text2)">Pausado</span>
+      <span class="status-badge" style="color:var(--green)">Resuelto</span>
+      <span class="status-badge" style="color:var(--text2)">Cerrado</span>
+    </div>
+    <h3>Prioridades</h3>
+    <div class="badge-row">
+      <span class="status-badge" style="color:var(--red)">Urgente</span>
+      <span class="status-badge" style="color:var(--amber)">Alta</span>
+      <span class="status-badge" style="color:var(--blue)">Media</span>
+      <span class="status-badge" style="color:var(--text2)">Baja</span>
+    </div>
+    <h3>Panel derecho (detalle)</h3>
+    <ul>
+      <li><strong>SLA</strong>: estado con color, tiempo restante/vencido/pausado. Botón Pausar/Reanudar para admin y agentes.</li>
+      <li><strong>Bandeja</strong>: bandeja actual con botón "Mover a bandeja" y selector de destino + motivo.</li>
+      <li><strong>Asignado a</strong>: agente actual con botón "Cambiar agente" y selector de usuarios activos.</li>
+      <li><strong>Solicitante</strong>: nombre, email.</li>
+      <li><strong>Detalles</strong>: área, categoría, timestamps.</li>
+      <li><strong>Historial</strong>: conteo de entradas, movimientos, cambios de estado y comentarios.</li>
+      <li><strong>Etiquetas</strong>: tags del ticket.</li>
+    </ul>
+    <h3>Tipos de entrada en el historial</h3>
+    <table>
+      <thead><tr><th>Tipo</th><th>Color</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>created</code></td><td><span class="tag tag-blue">azul</span></td><td>Creación del ticket. Muestra la descripción inicial.</td></tr>
+        <tr><td><code>status_change</code></td><td><span class="tag tag-teal">acento</span></td><td>Cambio de estado. Muestra badge antes → después.</td></tr>
+        <tr><td><code>queue_move</code></td><td><span class="tag tag-teal">teal</span></td><td>Movimiento de bandeja. Muestra nombre origen → destino.</td></tr>
+        <tr><td><code>assign</code></td><td><span class="tag tag-amber">ámbar</span></td><td>Asignación/reasignación. Muestra agente anterior → nuevo.</td></tr>
+        <tr><td><code>comment</code></td><td><span class="tag tag-gray">neutro</span></td><td>Comentario de actualización con categoría.</td></tr>
+      </tbody>
+    </table>
+    <h3>Categorías de actualización</h3>
+    <div class="badge-row">
+      <span class="tag tag-gray">Diagnóstico</span><span class="tag tag-gray">Escalado</span>
+      <span class="tag tag-gray">Información adicional</span><span class="tag tag-gray">Resolución</span>
+      <span class="tag tag-gray">Seguimiento</span><span class="tag tag-gray">Cierre</span>
+      <span class="tag tag-gray">Reasignación</span><span class="tag tag-gray">Otro</span>
+    </div>
+  </section>
+
+  <section id="kb">
+    <h2>Base de conocimiento</h2>
+    <p>Repositorio de artículos de soporte organizados por categoría. Accesible desde el sidebar bajo "Herramientas".</p>
+    <h3>Para todos los usuarios</h3>
+    <ul>
+      <li>Búsqueda por título en tiempo real</li>
+      <li>Filtro por categoría en panel lateral</li>
+      <li>Vista de detalle con contenido completo y referencia para abrir ticket</li>
+      <li>Clientes solo ven artículos publicados</li>
+    </ul>
+    <h3>Para administradores (ABM)</h3>
+    <ul>
+      <li>Botón <strong>"Nuevo artículo"</strong> en el header de la lista</li>
+      <li>Formulario con: Título, Categoría (select), Estado (borrador/publicado), Contenido (textarea)</li>
+      <li>Botón <strong>Editar</strong> en la vista de detalle: abre el formulario pre-cargado</li>
+      <li>Botón <strong>Eliminar</strong> con confirmación inline</li>
+    </ul>
+    <h3>Categorías</h3>
+    <div class="badge-row">
+      <span class="tag tag-gray">Acceso</span><span class="tag tag-gray">Infraestructura</span>
+      <span class="tag tag-gray">Software</span><span class="tag tag-gray">Hardware</span>
+      <span class="tag tag-gray">RRHH</span><span class="tag tag-gray">Soporte</span>
+      <span class="tag tag-gray">Seguridad</span><span class="tag tag-gray">Dev</span>
+      <span class="tag tag-gray">Otro</span>
+    </div>
+  </section>
+
+  <section id="sla-admin">
+    <h2>Reglas SLA</h2>
+    <p>Vista disponible para admin y agentes desde "Herramientas &gt; SLA / Reglas". Muestra tabla de reglas con toggle de activación.</p>
+    <ul>
+      <li>Administradores pueden crear, editar y eliminar reglas</li>
+      <li>Las reglas se aplican automáticamente al crear tickets</li>
+      <li>Una regla de área específica tiene prioridad sobre la regla <code>"all"</code> de la misma prioridad</li>
+    </ul>
+  </section>
+
+  <section id="reportes">
+    <h2>Reportes</h2>
+    <p>Dashboard en tiempo real disponible para admin y agentes. Muestra datos del mes actual por defecto.</p>
+    <div class="card-grid four">
+      <div class="card"><h4>Total del mes</h4><p>Tickets creados en el período + activos.</p></div>
+      <div class="card"><h4>Resueltos</h4><p>Cantidad y tasa de resolución (% del total). Verde si ≥ 70%.</p></div>
+      <div class="card"><h4>SLA vencidos</h4><p>Tickets activos con deadline pasado. Rojo si &gt; 0.</p></div>
+      <div class="card"><h4>Sin asignar</h4><p>Tickets activos sin agente. Ámbar si &gt; 0.</p></div>
+    </div>
+    <ul>
+      <li><strong>Por bandeja</strong>: gráfico de barras con abiertos (acento) y resueltos (verde), escala dinámica al máximo.</li>
+      <li><strong>Por prioridad</strong>: conteo con punto de color por categoría.</li>
+      <li><strong>Por agente</strong>: tabla con tickets totales/resueltos/abiertos y tasa de resolución.</li>
+    </ul>
+  </section>
+
+  <section id="admin">
+    <h2>Administración</h2>
+    <p>Accesible únicamente para el rol <strong>admin</strong> desde la sección "Administración" del sidebar.</p>
+    <div class="card-grid three">
+      <div class="card">
+        <h4>Bandejas</h4>
+        <ul>
+          <li>Crear con ID personalizable, nombre, color y responsable</li>
+          <li>Editar nombre, color y responsable</li>
+          <li>Activar / desactivar</li>
+          <li>Eliminar</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Usuarios</h4>
+        <ul>
+          <li>Crear con nombre, email y rol</li>
+          <li>Contraseña inicial: <code>equilybrio2026</code></li>
+          <li>Editar datos y cambiar contraseña</li>
+          <li>Activar / desactivar</li>
+          <li>Eliminar</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Roles</h4>
+        <ul>
+          <li>Crear roles con ID, label, descripción y color</li>
+          <li>Asignar permisos granulares (10 permisos disponibles)</li>
+          <li>Editar y eliminar roles editables</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEPLOY ── -->
+  <section id="deploy">
+    <h2>Despliegue</h2>
+    <h3>Docker Compose (recomendado)</h3>
+    <pre>
+<span class="c"># Arrancar todo el stack</span>
+docker compose up -d
+
+<span class="c"># Ver logs en vivo</span>
+docker compose logs -f backend
+
+<span class="c"># Reconstruir tras cambios</span>
+docker compose up -d --build</pre>
+
+    <h3>Dockerfile del backend</h3>
+    <pre>
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json prisma/ ./
+RUN npm ci &amp;&amp; npx prisma generate
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</pre>
+
+    <h3>Base de datos</h3>
+    <pre>
+<span class="c"># Aplicar cambios de schema</span>
+npx prisma db push
+
+<span class="c"># Crear migración formal</span>
+npx prisma migrate dev --name descripcion
+
+<span class="c"># Poblar con datos iniciales</span>
+npm run seed
+
+<span class="c"># Abrir Prisma Studio</span>
+npm run db:studio</pre>
+
+    <p>El backend siembra la base automáticamente si no existe ningún usuario al iniciar (<code>runSeed()</code> en <code>server.js</code>).</p>
+  </section>
+
+  <!-- ── ENV ── -->
+  <section id="env">
+    <h2>Variables de entorno</h2>
+    <table>
+      <thead><tr><th>Variable</th><th>Default</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><code>DATABASE_URL</code></td><td><span class="type-tag">postgresql://ticketera:ticketera@localhost:5432/ticketera</span></td><td>URL de conexión a PostgreSQL.</td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td><span class="type-tag">—</span></td><td>Secreto para firmar tokens JWT. <strong>Obligatorio cambiar en producción.</strong></td></tr>
+        <tr><td><code>JWT_EXPIRES_IN</code></td><td><span class="type-tag">8h</span></td><td>Expiración del JWT.</td></tr>
+        <tr><td><code>PORT</code></td><td><span class="type-tag">3000</span></td><td>Puerto del servidor Express.</td></tr>
+        <tr><td><code>CORS_ORIGIN</code></td><td><span class="type-tag">http://localhost:5173</span></td><td>Origen permitido para CORS.</td></tr>
+        <tr><td><code>VITE_API_URL</code></td><td><span class="type-tag">/api</span></td><td>Base URL de la API en el frontend.</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box"><strong>Nota de seguridad:</strong> El archivo <code>.env</code> no debe commitearse. Usar <code>.env.example</code> como plantilla. Cambiar <code>JWT_SECRET</code> y contraseña de la base de datos antes de cualquier despliegue en producción.</div>
+  </section>
+
+</main>
+
+<script>
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id], .cover');
+  const links    = document.querySelectorAll('nav a');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
