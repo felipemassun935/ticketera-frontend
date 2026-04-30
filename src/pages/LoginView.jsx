@@ -37,7 +37,7 @@ export default function LoginView() {
           </div>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, color: C.text0, letterSpacing: '-0.01em' }}>Ticketera</div>
-            <div style={{ fontSize: 9, color: C.text2, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Equilybrio Group</div>
+            <div style={{ fontSize: 9, color: C.text2, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Felipe Massun</div>
           </div>
         </div>
 
