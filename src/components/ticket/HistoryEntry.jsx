@@ -60,6 +60,14 @@ export default function HistoryEntry({ entry, isLast }) {
           </div>
         )}
 
+        {entry.type === 'assign' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: entry.comment ? 5 : 0 }}>
+            <span style={{ fontSize: 11, color: C.text2 }}>{entry.from_val || 'Sin asignar'}</span>
+            <Icon d={ARROW} size={11} varColor="--text2" />
+            <span style={{ fontSize: 11, color: 'var(--amber)', fontWeight: 500 }}>{entry.to_val || 'Sin asignar'}</span>
+          </div>
+        )}
+
         {entry.type === 'created' && !entry.comment && (
           <div style={{ fontSize: 12, color: C.text2 }}>Ticket registrado</div>
         )}

@@ -15,7 +15,7 @@ import HistoryEntry from '../components/ticket/HistoryEntry';
 import { PanelSection, PanelRow } from '../components/ticket/PanelSection';
 
 export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
-  const { queues }    = useAdmin();
+  const { queues, users } = useAdmin();
   const [ticket,    setTicket]    = useState(init);
   const [newStatus, setNewStatus] = useState(init.status);
   const [newCat,    setNewCat]    = useState(UPDATE_CATS[0]);
@@ -23,7 +23,9 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
   const [saving,    setSaving]    = useState(false);
   const [targetQ,   setTargetQ]   = useState('');
   const [moveNote,  setMoveNote]  = useState('');
-  const [moveOpen,  setMoveOpen]  = useState(false);
+  const [moveOpen,   setMoveOpen]   = useState(false);
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assignVal,  setAssignVal]  = useState('');
   const histRef = useRef(null);
 
   useEffect(() => {
@@ -38,6 +40,18 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
       setTicket(t);
       onUpdate(t);
       setComment('');
+    } finally { setSaving(false); }
+  }
+
+  async function doAssign(userId) {
+    setSaving(true);
+    try {
+      const { ticket: t } = await api.patch(`/tickets/${ticket.id}`, {
+        assignee_id: userId === '' ? null : Number(userId),
+      });
+      setTicket(t);
+      onUpdate(t);
+      setAssignOpen(false);
     } finally { setSaving(false); }
   }
 
@@ -159,10 +173,35 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
 
           {role !== 'customer' && (
             <PanelSection label="Asignado a">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 }}>
                 <Avatar name={ticket.assignee_name || 'SA'} size={20} />
-                <span style={{ fontSize: 11, color: C.text1 }}>{ticket.assignee_name || 'Sin asignar'}</span>
+                <span style={{ fontSize: 11, color: C.text1, flex: 1 }}>{ticket.assignee_name || 'Sin asignar'}</span>
               </div>
+              <button
+                onClick={() => { setAssignVal(ticket.assignee?.id?.toString() ?? ''); setAssignOpen(o => !o); }}
+                style={{ width: '100%', background: 'transparent', border: `1px solid ${C.border}`, color: C.text1, fontSize: 11, padding: '5px 0', borderRadius: 4, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, transition: 'border-color 0.12s' }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--accent)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+              >
+                <Icon d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" size={11} varColor="--text2" /> Cambiar agente
+              </button>
+              {assignOpen && (
+                <div style={{ marginTop: 7, background: C.bg0, border: `1px solid ${C.border}`, borderRadius: 5, padding: '10px' }}>
+                  <label style={{ fontSize: 9, color: C.text2, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: 4 }}>Agente</label>
+                  <select value={assignVal} onChange={e => setAssignVal(e.target.value)} style={{ ...iS, width: '100%', marginBottom: 7, fontSize: 11 }}>
+                    <option value="">Sin asignar</option>
+                    {users.filter(u => u.active && u.role_id !== 'customer').map(u => (
+                      <option key={u.id} value={u.id}>{u.name}</option>
+                    ))}
+                  </select>
+                  <div style={{ display: 'flex', gap: 5 }}>
+                    <button onClick={() => setAssignOpen(false)} style={{ flex: 1, background: 'transparent', border: `1px solid ${C.border}`, color: C.text2, fontSize: 10, padding: '4px 0', borderRadius: 3, cursor: 'pointer' }}>Cancelar</button>
+                    <button onClick={() => doAssign(assignVal)} disabled={saving} style={{ flex: 1, background: !saving ? 'var(--accent)' : C.bg3, border: 'none', color: !saving ? '#fff' : C.text2, fontSize: 10, fontWeight: 500, padding: '4px 0', borderRadius: 3, cursor: !saving ? 'pointer' : 'default', transition: 'all 0.15s' }}>
+                      {saving ? '…' : 'Asignar'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </PanelSection>
           )}
 
