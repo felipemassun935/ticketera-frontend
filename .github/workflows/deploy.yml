@@ -2,20 +2,17 @@ name: Deploy Frontend
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+
     steps:
-      - name: SSH deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /var/www/ticketera-frontend
-            git pull origin main
-            npm install
-            npm run build
+      - name: Deploy frontend
+        run: |
+          cd /var/www/ticketera-frontend
+          git pull origin main
+          npm install
+          npm run build
