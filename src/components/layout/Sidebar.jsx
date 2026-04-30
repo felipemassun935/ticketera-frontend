@@ -47,7 +47,11 @@ export default function Sidebar({ active, setActive, tickets, role }) {
   const toolItems = [
     { id: 'create', label: 'Nuevo ticket' },
     { id: 'kb',     label: 'Conocimiento' },
-    ...(role !== 'customer' ? [{ id: 'sla', label: 'SLA / Reglas' }, { id: 'reports', label: 'Reportes' }] : []),
+    ...(role !== 'customer' ? [
+      { id: 'templates', label: 'Plantillas' },
+      { id: 'sla',       label: 'SLA / Reglas' },
+      { id: 'reports',   label: 'Reportes' },
+    ] : []),
   ];
 
   return (

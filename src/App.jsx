@@ -13,6 +13,7 @@ import CreateView from './pages/CreateView';
 import KBView from './pages/KBView';
 import SLAView from './pages/SLAView';
 import ReportsView from './pages/ReportsView';
+import TemplatesAdmin from './pages/TemplatesAdmin';
 import QueuesAdmin from './pages/admin/QueuesAdmin';
 import UsersAdmin from './pages/admin/UsersAdmin';
 import RolesAdmin from './pages/admin/RolesAdmin';
@@ -23,6 +24,7 @@ const VIEW_TITLES = {
   unassigned:   'Sin asignar',
   create:       'Nuevo ticket',
   kb:           'Conocimiento',
+  templates:    'Plantillas de respuesta',
   sla:          'SLA / Reglas',
   reports:      'Reportes',
   admin_queues: 'Administración · Bandejas',
@@ -91,6 +93,7 @@ function AppInner() {
           )}
           {!selected && active === 'create'       && <CreateView role={role} onCreated={loadTickets} />}
           {!selected && active === 'kb'           && <KBView role={role} />}
+          {!selected && active === 'templates'    && role !== 'customer' && <TemplatesAdmin role={role} />}
           {!selected && active === 'sla'          && role !== 'customer' && <SLAView />}
           {!selected && active === 'reports'      && role !== 'customer' && <ReportsView />}
           {!selected && active === 'admin_queues' && isAdmin && <QueuesAdmin />}
