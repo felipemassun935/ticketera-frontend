@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Dark theme ─────────────────────────────────────── */
+[data-theme='dark'] {
+  --bg0: #191919;
+  --bg1: #1f1f1f;
+  --bg2: #252525;
+  --bg3: #2d2d2d;
+  --border: #313131;
+  --borderL: #3a3a3a;
+  --accent: #cf7452;
+  --accentD: #b86040;
+  --accentL: #d98b6a;
+  --accentMuted: rgba(207, 116, 82, 0.11);
+  --green: #78b07a;
+  --amber: #c98c4a;
+  --red: #c46262;
+  --blue: #6892b4;
+  --teal: #5ca89a;
+  --text0: #ede9e4;
+  --text1: #8a8480;
+  --text2: #524e4c;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --scrollbar: #383838;
+}
+
+/* ── Light theme ─────────────────────────────────────── */
+[data-theme='light'] {
+  --bg0: #f7f4f0;
+  --bg1: #f0ebe6;
+  --bg2: #e9e3dc;
+  --bg3: #e0d8cf;
+  --border: #d4cbc0;
+  --borderL: #c5bab0;
+  --accent: #cf7452;
+  --accentD: #b86040;
+  --accentL: #d98b6a;
+  --accentMuted: rgba(207, 116, 82, 0.1);
+  --green: #4a9450;
+  --amber: #a07030;
+  --red: #a84848;
+  --blue: #3a6890;
+  --teal: #2e8070;
+  --text0: #1e1a17;
+  --text1: #5c5248;
+  --text2: #948880;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --scrollbar: #c5bab0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg0);
+  color: var(--text0);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* ── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 2px;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) transparent;
+}
+
+/* ── Form elements ─────────────────────────────────── */
+select option {
+  background: var(--bg2);
+  color: var(--text0);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Base input style */
+.app-input {
+  width: 100%;
+  background: var(--bg0);
+  border: 1px solid var(--border);
+  color: var(--text0);
+  border-radius: 4px;
+  outline: none;
+  font-size: 12px;
+  padding: 6px 10px;
+  transition: border-color 0.15s;
+}
+
+.app-input:focus {
+  border-color: var(--accent);
+}
+
+textarea.app-input,
+input.app-input,
+select.app-input {
+  background: var(--bg0);
+  border: 1px solid var(--border);
+  color: var(--text0);
+}
