@@ -87,7 +87,7 @@ export default function RolesAdmin() {
     }));
   }
 
-  const usersPerRole = (roleId) => users.filter(u => u.role === roleId && u.active).length;
+  const usersPerRole = (roleId) => roles.find(r => r.id === roleId)?.user_count ?? 0;
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '22px' }}>

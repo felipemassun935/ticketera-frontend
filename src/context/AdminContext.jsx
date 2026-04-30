@@ -1,44 +1,79 @@
-import { createContext, useContext, useState } from 'react';
-import { QUEUES } from '../constants';
-import { INIT_USERS } from '../constants/users';
-import { INIT_ROLES } from '../constants/roles';
-
-// Enrich queues with an `active` flag and stable numeric id
-const INIT_QUEUES = QUEUES.map((q, i) => ({ ...q, active: true, _id: i + 1 }));
-
-let _userId  = INIT_USERS.length + 1;
-let _queueId = INIT_QUEUES.length + 1;
-let _roleId  = INIT_ROLES.length + 1;
+import { createContext, useContext, useState, useCallback } from 'react';
+import { api } from '../services/api';
 
 const AdminCtx = createContext(null);
 
 export function AdminProvider({ children }) {
-  const [queues, setQueues] = useState(INIT_QUEUES);
-  const [users,  setUsers]  = useState(INIT_USERS);
-  const [roles,  setRoles]  = useState(INIT_ROLES);
+  const [queues, setQueues] = useState([]);
+  const [users,  setUsers]  = useState([]);
+  const [roles,  setRoles]  = useState([]);
 
-  // ── Queues ──────────────────────────────────────────────────
-  function addQueue(q)    { setQueues(qs => [...qs, { ...q, _id: ++_queueId, active: true }]); }
-  function updateQueue(q) { setQueues(qs => qs.map(x => x._id === q._id ? q : x)); }
-  function removeQueue(id){ setQueues(qs => qs.filter(x => x._id !== id)); }
-  function toggleQueue(id){ setQueues(qs => qs.map(x => x._id === id ? { ...x, active: !x.active } : x)); }
+  const loadAdmin = useCallback(async () => {
+    const [qRes, rRes] = await Promise.all([
+      api.get('/queues'),
+      api.get('/roles'),
+    ]);
+    setQueues(qRes.queues);
+    setRoles(rRes.roles);
+    api.get('/users').then(r => setUsers(r.users)).catch(() => {});
+  }, []);
 
-  // ── Users ────────────────────────────────────────────────────
-  function addUser(u)    { setUsers(us => [...us, { ...u, id: ++_userId, active: true }]); }
-  function updateUser(u) { setUsers(us => us.map(x => x.id === u.id ? u : x)); }
-  function removeUser(id){ setUsers(us => us.filter(x => x.id !== id)); }
-  function toggleUser(id){ setUsers(us => us.map(x => x.id === id ? { ...x, active: !x.active } : x)); }
+  // ── Queues ────────────────────────────────────────────────────
+  async function addQueue(q) {
+    const { queue } = await api.post('/queues', { id: q.id, name: q.name, owner_name: q.owner_name, color: q.color });
+    setQueues(qs => [...qs, queue]);
+  }
+  async function updateQueue(q) {
+    const { queue } = await api.patch(`/queues/${q.id}`, { name: q.name, owner_name: q.owner_name, color: q.color });
+    setQueues(qs => qs.map(x => x.id === q.id ? queue : x));
+  }
+  async function removeQueue(id) {
+    await api.del(`/queues/${id}`);
+    setQueues(qs => qs.filter(x => x.id !== id));
+  }
+  async function toggleQueue(id) {
+    const { queue } = await api.patch(`/queues/${id}/toggle`);
+    setQueues(qs => qs.map(x => x.id === id ? queue : x));
+  }
 
-  // ── Roles ────────────────────────────────────────────────────
-  function addRole(r)    { setRoles(rs => [...rs, { ...r, id: `role_${++_roleId}`, editable: true }]); }
-  function updateRole(r) { setRoles(rs => rs.map(x => x.id === r.id ? r : x)); }
-  function removeRole(id){ setRoles(rs => rs.filter(x => x.id !== id)); }
+  // ── Users ──────────────────────────────────────────────────────
+  async function addUser(u) {
+    const { user } = await api.post('/users', { name: u.name, email: u.email, password: u.password, role: u.role_id ?? u.role ?? 'agent' });
+    setUsers(us => [...us, user]);
+  }
+  async function updateUser(u) {
+    const { user } = await api.patch(`/users/${u.id}`, { name: u.name, email: u.email, role: u.role_id ?? u.role, ...(u.password && { password: u.password }) });
+    setUsers(us => us.map(x => x.id === u.id ? user : x));
+  }
+  async function removeUser(id) {
+    await api.del(`/users/${id}`);
+    setUsers(us => us.filter(x => x.id !== id));
+  }
+  async function toggleUser(id) {
+    const { user } = await api.patch(`/users/${id}/toggle`);
+    setUsers(us => us.map(x => x.id === id ? user : x));
+  }
+
+  // ── Roles ──────────────────────────────────────────────────────
+  async function addRole(r) {
+    const { role } = await api.post('/roles', { id: r.id, label: r.label, description: r.description, color: r.color, permissions: r.permissions });
+    setRoles(rs => [...rs, role]);
+  }
+  async function updateRole(r) {
+    const { role } = await api.patch(`/roles/${r.id}`, { label: r.label, description: r.description, color: r.color, permissions: r.permissions });
+    setRoles(rs => rs.map(x => x.id === r.id ? role : x));
+  }
+  async function removeRole(id) {
+    await api.del(`/roles/${id}`);
+    setRoles(rs => rs.filter(x => x.id !== id));
+  }
 
   return (
     <AdminCtx.Provider value={{
       queues, addQueue, updateQueue, removeQueue, toggleQueue,
       users,  addUser,  updateUser,  removeUser,  toggleUser,
       roles,  addRole,  updateRole,  removeRole,
+      loadAdmin,
     }}>
       {children}
     </AdminCtx.Provider>
