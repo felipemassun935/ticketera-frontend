@@ -47,7 +47,7 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
   const stats = [
     ['Activos',      tickets.filter(t => !['closed','resolved'].includes(t.status)).length, null],
     ['Urgentes',     tickets.filter(t => t.priority === 'urgent' && !['closed','resolved'].includes(t.status)).length, '--red'],
-    ['SLA vencidos', tickets.filter(t => t.sla_deadline && new Date(t.sla_deadline) < now && !['closed','resolved'].includes(t.status)).length, '--amber'],
+    ['SLA vencidos', tickets.filter(t => t.sla_deadline && new Date(t.sla_deadline) < now && !['closed','resolved','paused'].includes(t.status)).length, '--amber'],
     ['Sin asignar',  tickets.filter(t => !t.assignee_name && !['closed','resolved'].includes(t.status)).length, null],
   ];
 
@@ -122,7 +122,7 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
         {loading && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 80, color: C.text2, fontSize: 12 }}>Cargando…</div>}
         {!loading && rows.length === 0 && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 160, color: C.text2, fontSize: 12 }}>Sin resultados</div>}
         {rows.map((t, i) => {
-          const sc = slaVarColor(t.sla_deadline, t.status);
+          const sc = slaVarColor(t.sla_deadline, t.status, t.sla_paused_at);
           const q  = queues.find(x => x.id === t.queue_id);
           return (
             <div
@@ -150,7 +150,7 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
               <div style={{ alignSelf: 'center' }}><StatusBadge status={t.status} /></div>
               <div style={{ alignSelf: 'center', fontSize: 10, color: `var(${sc})`, fontWeight: sc !== '--text1' ? 500 : 400, display: 'flex', alignItems: 'center', gap: 3 }}>
                 {sc !== '--text1' && <Dot varColor={sc} size={4} />}
-                {slaLabel(t.sla_deadline, t.status)}
+                {slaLabel(t.sla_deadline, t.status, t.sla_paused_at)}
               </div>
             </div>
           );

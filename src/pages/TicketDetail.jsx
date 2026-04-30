@@ -55,6 +55,21 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
     } finally { setSaving(false); }
   }
 
+  async function togglePause() {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const isPaused = ticket.status === 'paused';
+      const { ticket: t } = await api.post(`/tickets/${ticket.id}/update`, {
+        comment:  isPaused ? 'SLA reanudado.' : 'SLA pausado.',
+        status:   isPaused ? 'open' : 'paused',
+        category: 'Seguimiento',
+      });
+      setTicket(t);
+      onUpdate(t);
+    } finally { setSaving(false); }
+  }
+
   async function doMove() {
     if (!targetQ || saving) return;
     setSaving(true);
@@ -69,7 +84,7 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
   }
 
   const q        = queues.find(x => x.id === ticket.queue_id);
-  const slaColor = slaVarColor(ticket.sla_deadline, ticket.status);
+  const slaColor = slaVarColor(ticket.sla_deadline, ticket.status, ticket.sla_paused_at);
 
   return (
     <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
@@ -134,10 +149,35 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
       <div style={{ width: 232, background: C.bg1, borderLeft: `1px solid ${C.border}`, overflowY: 'auto', flexShrink: 0 }}>
         <div style={{ padding: '14px' }}>
           <PanelSection label="SLA">
-            <div style={{ fontSize: 11, color: `var(${slaColor})`, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5 }}>
+            <div style={{ fontSize: 11, color: `var(${slaColor})`, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5, marginBottom: 6 }}>
               <Dot varColor={slaColor} size={5} />
-              {slaLabel(ticket.sla_deadline, ticket.status)}
+              {slaLabel(ticket.sla_deadline, ticket.status, ticket.sla_paused_at)}
             </div>
+            {role !== 'customer' && !['resolved', 'closed'].includes(ticket.status) && ticket.sla_deadline && (
+              <button
+                onClick={togglePause}
+                disabled={saving}
+                style={{ width: '100%', background: 'transparent', border: `1px solid ${C.border}`, color: C.text1, fontSize: 11, padding: '5px 0', borderRadius: 4, cursor: saving ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, transition: 'border-color 0.12s' }}
+                onMouseEnter={e => !saving && (e.currentTarget.style.borderColor = 'var(--accent)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+              >
+                {ticket.status === 'paused' ? (
+                  <>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Reanudar SLA
+                  </>
+                ) : (
+                  <>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                    </svg>
+                    Pausar SLA
+                  </>
+                )}
+              </button>
+            )}
           </PanelSection>
 
           {role !== 'customer' && (

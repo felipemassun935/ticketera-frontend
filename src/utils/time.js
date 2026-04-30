@@ -1,11 +1,15 @@
-import { NOW } from '../constants';
-
 export function timeAgo(ts) {
-  const d = Math.floor((NOW - new Date(ts)) / 60000);
-  if (d < 1)    return 'ahora';
-  if (d < 60)   return `${d}m`;
-  if (d < 1440) return `${Math.floor(d / 60)}h`;
-  return `${Math.floor(d / 1440)}d`;
+  const mins = Math.floor((new Date() - new Date(ts)) / 60000);
+  if (mins < 1)    return 'ahora';
+  if (mins < 60)   return `${mins}m`;
+  if (mins < 1440) {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  }
+  const d = Math.floor(mins / 1440);
+  const h = Math.floor((mins % 1440) / 60);
+  return h > 0 ? `${d}d ${h}h` : `${d}d`;
 }
 
 export function fmtTs(ts) {

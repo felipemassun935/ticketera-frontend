@@ -25,6 +25,7 @@ export const STATUS_CFG = {
   new:      { label: 'Nuevo',     varColor: '--blue'   },
   open:     { label: 'Abierto',   varColor: '--accent'  },
   pending:  { label: 'Pendiente', varColor: '--amber'   },
+  paused:   { label: 'Pausado',   varColor: '--text2'   },
   resolved: { label: 'Resuelto',  varColor: '--green'   },
   closed:   { label: 'Cerrado',   varColor: '--text2'   },
 };
