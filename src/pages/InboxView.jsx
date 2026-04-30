@@ -9,13 +9,14 @@ import Dot from '../components/ui/Dot';
 import StatusBadge from '../components/ui/StatusBadge';
 import PriBadge from '../components/ui/PriBadge';
 import QDot from '../components/ui/QDot';
-//s
+
 export default function InboxView({ tickets, onSelect, role, active, loading }) {
   const { user }          = useAuth();
   const { queues, users } = useAdmin();
-  const [search,  setSearch]  = useState('');
-  const [statusF, setStatusF] = useState('all');
-  const [agentF,  setAgentF]  = useState('all');
+  const [search,      setSearch]      = useState('');
+  const [statusF,     setStatusF]     = useState('all');
+  const [agentF,      setAgentF]      = useState('all');
+  const [showClosed,  setShowClosed]  = useState(false);
 
   const agentNames = role === 'admin'
     ? users.filter(u => ['admin', 'agent'].includes(u.role_id) && u.active).map(u => u.name)
@@ -26,8 +27,16 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
   if (active === 'unassigned') rows = rows.filter(t => !t.assignee_name);
   if (active.startsWith('q_')) rows = rows.filter(t => t.queue_id === active.slice(2));
   if (role === 'customer')     rows = rows.filter(t => t.requester_email === user.email);
-  if (statusF !== 'all')       rows = rows.filter(t => t.status === statusF);
-  if (agentF  !== 'all')       rows = rows.filter(t => t.assignee_name === agentF);
+
+  // Closed tickets are hidden by default; toggle shows only closed
+  if (showClosed) {
+    rows = rows.filter(t => t.status === 'closed');
+  } else {
+    rows = rows.filter(t => t.status !== 'closed');
+    if (statusF !== 'all') rows = rows.filter(t => t.status === statusF);
+  }
+
+  if (agentF !== 'all') rows = rows.filter(t => t.assignee_name === agentF);
   if (search) {
     const q = search.toLowerCase();
     rows = rows.filter(t => [t.title, t.id, t.requester_name].join(' ').toLowerCase().includes(q));
@@ -71,23 +80,36 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
           </svg>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar…" style={{ ...iS, paddingLeft: 26, fontSize: 11, padding: '5px 8px 5px 26px' }} />
         </div>
-        <div style={{ display: 'flex', gap: 1 }}>
-          {['all','new','open','pending','resolved','closed'].map(s => (
-            <button key={s} onClick={() => setStatusF(s)} style={{ padding: '3px 9px', borderRadius: 3, border: 'none', fontSize: 10, fontWeight: 500, background: statusF === s ? C.accentMuted : 'transparent', color: statusF === s ? C.accent : C.text2, cursor: 'pointer', transition: 'all 0.1s' }}>
-              {s === 'all' ? 'Todos' : STATUS_CFG[s]?.label || s}
-            </button>
-          ))}
-        </div>
-        {role !== 'customer' && (
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: 10, color: C.text2 }}>Responsable</span>
-            <select value={agentF} onChange={e => setAgentF(e.target.value)} style={{ ...iS, padding: '4px 8px', fontSize: 11, width: 'auto' }}>
-              <option value="all">Todos</option>
-              {agentNames.map(a => <option key={a} value={a}>{a}</option>)}
-              <option value="">Sin asignar</option>
-            </select>
+        {!showClosed && (
+          <div style={{ display: 'flex', gap: 1 }}>
+            {['all','new','open','pending','resolved'].map(s => (
+              <button key={s} onClick={() => setStatusF(s)} style={{ padding: '3px 9px', borderRadius: 3, border: 'none', fontSize: 10, fontWeight: 500, background: statusF === s ? C.accentMuted : 'transparent', color: statusF === s ? C.accent : C.text2, cursor: 'pointer', transition: 'all 0.1s' }}>
+                {s === 'all' ? 'Todos' : STATUS_CFG[s]?.label || s}
+              </button>
+            ))}
           </div>
         )}
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+          {role !== 'customer' && (
+            <>
+              <span style={{ fontSize: 10, color: C.text2 }}>Responsable</span>
+              <select value={agentF} onChange={e => setAgentF(e.target.value)} style={{ ...iS, padding: '4px 8px', fontSize: 11, width: 'auto' }}>
+                <option value="all">Todos</option>
+                {agentNames.map(a => <option key={a} value={a}>{a}</option>)}
+                <option value="">Sin asignar</option>
+              </select>
+            </>
+          )}
+          <button
+            onClick={() => { setShowClosed(v => !v); setStatusF('all'); }}
+            style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '3px 9px', borderRadius: 3, border: `1px solid ${showClosed ? 'var(--text2)' : C.border}`, fontSize: 10, fontWeight: showClosed ? 500 : 400, background: showClosed ? C.bg3 : 'transparent', color: showClosed ? C.text1 : C.text2, cursor: 'pointer', transition: 'all 0.1s' }}
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+            </svg>
+            Archivados
+          </button>
+        </div>
       </div>
 
       {/* Header */}
