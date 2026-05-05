@@ -17,19 +17,21 @@ import TemplatesAdmin from './pages/TemplatesAdmin';
 import QueuesAdmin from './pages/admin/QueuesAdmin';
 import UsersAdmin from './pages/admin/UsersAdmin';
 import RolesAdmin from './pages/admin/RolesAdmin';
+import OrdenesPagoView from './pages/OrdenesPagoView';
 
 const VIEW_TITLES = {
-  all:          'Todas las bandejas',
-  mine:         'Mis tickets',
-  unassigned:   'Sin asignar',
-  create:       'Nuevo ticket',
-  kb:           'Conocimiento',
-  templates:    'Plantillas de respuesta',
-  sla:          'SLA / Reglas',
-  reports:      'Reportes',
-  admin_queues: 'Administración · Bandejas',
-  admin_users:  'Administración · Usuarios',
-  admin_roles:  'Administración · Roles',
+  all:           'Todas las bandejas',
+  mine:          'Mis tickets',
+  unassigned:    'Sin asignar',
+  create:        'Nuevo ticket',
+  kb:            'Conocimiento',
+  templates:     'Plantillas de respuesta',
+  sla:           'SLA / Reglas',
+  reports:       'Reportes',
+  admin_queues:  'Administración · Bandejas',
+  admin_users:   'Administración · Usuarios',
+  admin_roles:   'Administración · Roles',
+  ordenes_pago:  'Órdenes de Pago',
 };
 
 function AppInner() {
@@ -96,9 +98,10 @@ function AppInner() {
           {!selected && active === 'templates'    && role !== 'customer' && <TemplatesAdmin role={role} />}
           {!selected && active === 'sla'          && role !== 'customer' && <SLAView />}
           {!selected && active === 'reports'      && role !== 'customer' && <ReportsView />}
-          {!selected && active === 'admin_queues' && isAdmin && <QueuesAdmin />}
-          {!selected && active === 'admin_users'  && isAdmin && <UsersAdmin />}
-          {!selected && active === 'admin_roles'  && isAdmin && <RolesAdmin />}
+          {!selected && active === 'admin_queues'  && isAdmin && <QueuesAdmin />}
+          {!selected && active === 'admin_users'   && isAdmin && <UsersAdmin />}
+          {!selected && active === 'admin_roles'   && isAdmin && <RolesAdmin />}
+          {!selected && active === 'ordenes_pago'  && role !== 'customer' && <OrdenesPagoView role={role} />}
         </div>
       </div>
     </div>

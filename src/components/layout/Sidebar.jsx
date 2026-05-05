@@ -91,6 +91,14 @@ export default function Sidebar({ active, setActive, tickets, role }) {
           {toolItems.map(n => <SidebarBtn key={n.id} id={n.id} label={n.label} active={active} onClick={setActive} />)}
         </Section>
 
+        {role !== 'customer' && (
+          <Section label="Órdenes">
+            <SidebarBtn id="ordenes_pago" label="Órdenes de Pago" active={active} onClick={setActive}
+              icon={<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>}
+            />
+          </Section>
+        )}
+
         {role === 'admin' && (
           <Section label="Administración">
             <SidebarBtn id="admin_queues" label="Bandejas" active={active} onClick={setActive}
