@@ -41,7 +41,7 @@ export default function LoginView() {
           </div>
         </div>
 
-        {/* Card */}
+        {/* Cardd*/}
         <div style={{ background: C.bg1, border: `1px solid ${C.border}`, borderRadius: 8, padding: '24px 24px 20px' }}>
           <div style={{ fontSize: 13, fontWeight: 500, color: C.text0, marginBottom: 2 }}>Iniciar sesión</div>
           <div style={{ fontSize: 11, color: C.text2, marginBottom: 20 }}>Accedé al panel de soporte</div>
