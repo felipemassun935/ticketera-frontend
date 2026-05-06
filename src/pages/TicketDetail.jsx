@@ -30,10 +30,18 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
   const [templates,   setTemplates]   = useState([]);
   const [tplCat,      setTplCat]      = useState('all');
   const histRef = useRef(null);
+  const commentRef = useRef(null);
 
   useEffect(() => {
     if (histRef.current) histRef.current.scrollTop = histRef.current.scrollHeight;
   }, [ticket.history?.length]);
+
+  useEffect(() => {
+    const el = commentRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  }, [comment]);
 
   useEffect(() => {
     if (role === 'customer') return;
@@ -137,10 +145,11 @@ export default function TicketDetail({ ticket: init, onBack, role, onUpdate }) {
             </div>
             <div style={{ position: 'relative', marginBottom: 7 }}>
               <textarea
+                ref={commentRef}
                 value={comment} onChange={e => setComment(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) addUpdate(); }}
                 placeholder="Escribe una actualización… (Ctrl+Enter para guardar)"
-                rows={2} style={{ ...iS, width: '100%', resize: 'none', lineHeight: 1.6 }}
+                rows={4} style={{ ...iS, width: '100%', resize: 'none', lineHeight: 1.6, minHeight: 80, overflow: 'hidden' }}
               />
               {/* Template picker popover */}
               {tplOpen && templates.length > 0 && (() => {
