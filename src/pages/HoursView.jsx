@@ -247,17 +247,59 @@ export function HoursTable({ entries, loading, onSelect, admin = false, actions 
 
 function HourDetail({ entry, onClose }) {
   return (
-    <Modal title={`Registro #${entry.id}`} onClose={onClose} width={520}>
-      <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '10px 12px', fontSize: 12 }}>
-        <div style={{ color: C.text2 }}>Fecha</div><div style={{ color: C.text0 }}>{entry.date}</div>
-        {entry.user_name && <><div style={{ color: C.text2 }}>Usuario</div><div style={{ color: C.text0 }}>{entry.user_name}</div></>}
-        <div style={{ color: C.text2 }}>Proyecto</div><div style={{ color: C.text0 }}>{entry.project_name}</div>
-        <div style={{ color: C.text2 }}>Horas</div><div style={{ color: C.text0 }}>{Number(entry.hours).toFixed(2)}</div>
-        <div style={{ color: C.text2 }}>Estado</div><div><StatusBadge status={entry.status} /></div>
-        <div style={{ color: C.text2 }}>Descripción</div><div style={{ color: C.text0, whiteSpace: 'pre-wrap' }}>{entry.description}</div>
-        {entry.reviewer_name && <><div style={{ color: C.text2 }}>Revisado por</div><div style={{ color: C.text0 }}>{entry.reviewer_name}</div></>}
-        {entry.reviewed_at && <><div style={{ color: C.text2 }}>Fecha revisión</div><div style={{ color: C.text0 }}>{new Date(entry.reviewed_at).toLocaleString('es-AR')}</div></>}
-        {entry.rejection_comment && <><div style={{ color: C.text2 }}>Comentario</div><div style={{ color: C.red }}>{entry.rejection_comment}</div></>}
+    <Modal title={`Detalle de horas · ${entry.date}`} onClose={onClose} width={760}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
+          <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.text2, marginBottom: 6 }}>Horas</div>
+            <div style={{ fontSize: 28, fontWeight: 700, color: C.text0, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{Number(entry.hours).toFixed(2)} h</div>
+          </div>
+          <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.text2, marginBottom: 8 }}>Estado</div>
+            <StatusBadge status={entry.status} />
+          </div>
+          <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.text2, marginBottom: 6 }}>Proyecto</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: C.text0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{entry.project_name}</div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '12px 18px', fontSize: 14, background: C.bg0, border: `1px solid ${C.border}`, borderRadius: 6, padding: 18 }}>
+          <div style={{ color: C.text2, fontWeight: 600 }}>Fecha</div>
+          <div style={{ color: C.text0 }}>{entry.date}</div>
+          {entry.user_name && (
+            <>
+              <div style={{ color: C.text2, fontWeight: 600 }}>Usuario</div>
+              <div style={{ color: C.text0 }}>{entry.user_name}</div>
+            </>
+          )}
+          <div style={{ color: C.text2, fontWeight: 600 }}>Creado</div>
+          <div style={{ color: C.text0 }}>{entry.created_at ? new Date(entry.created_at).toLocaleString('es-AR') : '—'}</div>
+          {entry.reviewer_name && (
+            <>
+              <div style={{ color: C.text2, fontWeight: 600 }}>Revisado por</div>
+              <div style={{ color: C.text0 }}>{entry.reviewer_name}</div>
+            </>
+          )}
+          {entry.reviewed_at && (
+            <>
+              <div style={{ color: C.text2, fontWeight: 600 }}>Fecha revisión</div>
+              <div style={{ color: C.text0 }}>{new Date(entry.reviewed_at).toLocaleString('es-AR')}</div>
+            </>
+          )}
+        </div>
+
+        <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: 18 }}>
+          <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.text2, marginBottom: 10 }}>Descripción del trabajo</div>
+          <div style={{ color: C.text0, fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{entry.description}</div>
+        </div>
+
+        {entry.rejection_comment && (
+          <div style={{ background: 'rgba(196,98,98,0.10)', border: '1px solid rgba(196,98,98,0.35)', borderRadius: 6, padding: 16 }}>
+            <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.red, marginBottom: 8 }}>Comentario de rechazo</div>
+            <div style={{ color: C.red, fontSize: 13, lineHeight: 1.6 }}>{entry.rejection_comment}</div>
+          </div>
+        )}
       </div>
     </Modal>
   );
