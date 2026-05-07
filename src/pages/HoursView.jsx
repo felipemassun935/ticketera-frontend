@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { api } from '../services/api';
 import { useAdmin } from '../context/AdminContext';
 import { C, iS } from '../styles/tokens';
@@ -61,7 +61,6 @@ export default function HoursView() {
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
   const [form, setForm] = useState({ date: todayLocal(), project_id: '', hours: 1, description: '' });
-  const descriptionRef = useRef(null);
 
   const activeProjects = queues.filter(q => q.active);
   const projectId = form.project_id || activeProjects[0]?.id || '';
@@ -85,13 +84,6 @@ export default function HoursView() {
   }
 
   useEffect(() => { load(); }, [month, year]);
-
-  useEffect(() => {
-    const el = descriptionRef.current;
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 360)}px`;
-  }, [form.description]);
 
   const dailyTotal = useMemo(() => (
     entries.filter(e => e.date === form.date).reduce((sum, e) => sum + Number(e.hours || 0), 0)
@@ -178,12 +170,11 @@ export default function HoursView() {
 
             <FormField label="Descripción" labelStyle={labelStyle}>
               <textarea
-                ref={descriptionRef}
                 value={form.description}
                 onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
                 rows={8}
                 placeholder="Detalle del trabajo realizado…"
-                style={{ ...inputStyle, height: 'auto', minHeight: 190, maxHeight: 360, overflowY: 'auto', resize: 'vertical', lineHeight: 1.55 }}
+                style={{ ...inputStyle, height: 220, minHeight: 220, maxHeight: 220, overflowY: 'auto', resize: 'none', lineHeight: 1.55 }}
               />
             </FormField>
 
