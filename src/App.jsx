@@ -18,6 +18,8 @@ import QueuesAdmin from './pages/admin/QueuesAdmin';
 import UsersAdmin from './pages/admin/UsersAdmin';
 import RolesAdmin from './pages/admin/RolesAdmin';
 import OrdenesPagoView from './pages/OrdenesPagoView';
+import HoursView from './pages/HoursView';
+import HoursReviewAdmin from './pages/admin/HoursReviewAdmin';
 
 const VIEW_TITLES = {
   all:           'Todas las bandejas',
@@ -28,6 +30,8 @@ const VIEW_TITLES = {
   templates:     'Plantillas de respuesta',
   sla:           'SLA / Reglas',
   reports:       'Reportes',
+  hours:         'Carga de Horas',
+  admin_hours:   'Revisión de Horas',
   admin_queues:  'Administración · Bandejas',
   admin_users:   'Administración · Usuarios',
   admin_roles:   'Administración · Roles',
@@ -98,6 +102,8 @@ function AppInner() {
           {!selected && active === 'templates'    && role !== 'customer' && <TemplatesAdmin role={role} />}
           {!selected && active === 'sla'          && role !== 'customer' && <SLAView />}
           {!selected && active === 'reports'      && role !== 'customer' && <ReportsView />}
+          {!selected && active === 'hours'        && <HoursView />}
+          {!selected && active === 'admin_hours'  && isAdmin && <HoursReviewAdmin />}
           {!selected && active === 'admin_queues'  && isAdmin && <QueuesAdmin />}
           {!selected && active === 'admin_users'   && isAdmin && <UsersAdmin />}
           {!selected && active === 'admin_roles'   && isAdmin && <RolesAdmin />}

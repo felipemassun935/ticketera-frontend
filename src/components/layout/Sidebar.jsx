@@ -89,6 +89,9 @@ export default function Sidebar({ active, setActive, tickets, role }) {
 
         <Section label="Herramientas">
           {toolItems.map(n => <SidebarBtn key={n.id} id={n.id} label={n.label} active={active} onClick={setActive} />)}
+          <SidebarBtn id="hours" label="Carga de Horas" active={active} onClick={setActive}
+            icon={<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
+          />
         </Section>
 
         {role !== 'customer' && (
@@ -109,6 +112,9 @@ export default function Sidebar({ active, setActive, tickets, role }) {
             />
             <SidebarBtn id="admin_roles" label="Roles" active={active} onClick={setActive}
               icon={<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>}
+            />
+            <SidebarBtn id="admin_hours" label="Revisión de Horas" active={active} onClick={setActive}
+              icon={<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>}
             />
           </Section>
         )}
