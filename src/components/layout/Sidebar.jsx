@@ -3,7 +3,7 @@ import { useAdmin } from '../../context/AdminContext';
 import { C } from '../../styles/tokens';
 import Dot from '../ui/Dot';
 
-function SidebarBtn({ id, label, badge, dot, icon, active, onClick }) {
+function SidebarBtn({ id, label, badge, dot, icon, active, onClick, prominent = false }) {
   const on = active === id;
   let prefix;
   if (dot)       prefix = <Dot hex={dot} size={6} />;
@@ -13,7 +13,7 @@ function SidebarBtn({ id, label, badge, dot, icon, active, onClick }) {
   return (
     <button
       onClick={() => onClick(id)}
-      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 8, padding: '5px 10px', borderRadius: 4, border: 'none', background: on ? C.accentMuted : 'transparent', color: on ? C.accent : C.text1, cursor: 'pointer', textAlign: 'left', fontSize: 12, fontWeight: on ? 500 : 400, transition: 'all 0.12s' }}
+      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: prominent ? 10 : 8, padding: prominent ? '9px 11px' : '5px 10px', borderRadius: prominent ? 6 : 4, border: prominent && !on ? `1px solid ${C.border}` : 'none', background: on ? C.accentMuted : (prominent ? C.bg2 : 'transparent'), color: on ? C.accent : C.text1, cursor: 'pointer', textAlign: 'left', fontSize: prominent ? 13 : 12, fontWeight: on || prominent ? 600 : 400, transition: 'all 0.12s' }}
     >
       {prefix}
       <span style={{ flex: 1 }}>{label}</span>
@@ -89,8 +89,12 @@ export default function Sidebar({ active, setActive, tickets, role }) {
 
         <Section label="Herramientas">
           {toolItems.map(n => <SidebarBtn key={n.id} id={n.id} label={n.label} active={active} onClick={setActive} />)}
+        </Section>
+
+        <Section label="Horas">
           <SidebarBtn id="hours" label="Carga de Horas" active={active} onClick={setActive}
-            icon={<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
+            prominent
+            icon={<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
           />
         </Section>
 
