@@ -135,11 +135,9 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
               <div style={{ display: 'flex', alignItems: 'center', fontSize: 10, lineHeight: 1, fontFamily: 'IBM Plex Mono', color: C.text2 }}>{t.id}</div>
               <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <div style={{ fontSize: 12, fontWeight: 500, color: C.text0, lineHeight: 1.35 }}>{t.title}</div>
-                {t.tags?.length > 0 && (
-                  <div style={{ display: 'flex', gap: 4, marginTop: 3 }}>
-                    {t.tags.map(tag => <span key={tag} style={{ fontSize: 9, color: C.text2, padding: '0 4px', border: `1px solid ${C.border}`, borderRadius: 2 }}>#{tag}</span>)}
-                  </div>
-                )}
+                <div style={{ display: 'flex', gap: 4, marginTop: 3, minHeight: 16 }}>
+                  {(t.tags || []).map(tag => <span key={tag} style={{ fontSize: 9, color: C.text2, padding: '0 4px', border: `1px solid ${C.border}`, borderRadius: 2 }}>#{tag}</span>)}
+                </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Avatar name={t.requester_name} size={18} />
