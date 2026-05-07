@@ -31,3 +31,18 @@ export function slaLabel(dl, status, pausedAt) {
   if (r < 0) return `Vencido ${fmtDuration(r)}`;
   return `${fmtDuration(r)} restantes`;
 }
+
+// Returns [statusLine, timeLine] for two-line display in the table
+export function slaLines(dl, status, pausedAt) {
+  if (['resolved', 'closed'].includes(status)) return ['Cumplido', null];
+  if (!dl) return ['—', null];
+
+  if (status === 'paused' && pausedAt) {
+    const frozenMinutes = (new Date(dl) - new Date(pausedAt)) / 60000;
+    return ['Pausado', fmtDuration(frozenMinutes)];
+  }
+
+  const r = (new Date(dl) - new Date()) / 60000;
+  if (r < 0) return ['Vencido', fmtDuration(r)];
+  return [null, `${fmtDuration(r)} restantes`];
+}

@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useAdmin } from '../context/AdminContext';
 import { STATUS_CFG } from '../constants';
 import { C, iS } from '../styles/tokens';
-import { slaVarColor, slaLabel } from '../utils/sla';
+import { slaVarColor, slaLines } from '../utils/sla';
 import Avatar from '../components/ui/Avatar';
 import Dot from '../components/ui/Dot';
 import StatusBadge from '../components/ui/StatusBadge';
@@ -123,6 +123,7 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
         {!loading && rows.length === 0 && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 160, color: C.text2, fontSize: 12 }}>Sin resultados</div>}
         {rows.map((t, i) => {
           const sc = slaVarColor(t.sla_deadline, t.status, t.sla_paused_at);
+          const [slaTop, slaBottom] = slaLines(t.sla_deadline, t.status, t.sla_paused_at);
           const q  = queues.find(x => x.id === t.queue_id);
           return (
             <div
@@ -148,9 +149,16 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
               </div>
               <div style={{ display: 'flex', alignItems: 'center' }}><PriBadge priority={t.priority} /></div>
               <div style={{ display: 'flex', alignItems: 'center' }}><StatusBadge status={t.status} /></div>
-              <div style={{ fontSize: 10, color: `var(${sc})`, fontWeight: sc !== '--text1' ? 500 : 400, display: 'flex', alignItems: 'center', gap: 3 }}>
-                {sc !== '--text1' && <Dot varColor={sc} size={4} />}
-                {slaLabel(t.sla_deadline, t.status, t.sla_paused_at)}
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 2 }}>
+                {slaTop && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 3, fontSize: 10, lineHeight: 1, fontWeight: 500, color: `var(${sc})` }}>
+                    {sc !== '--text1' && <Dot varColor={sc} size={4} />}
+                    {slaTop}
+                  </div>
+                )}
+                {slaBottom && (
+                  <div style={{ fontSize: 9, lineHeight: 1, color: `var(${sc})`, opacity: 0.75 }}>{slaBottom}</div>
+                )}
               </div>
             </div>
           );
