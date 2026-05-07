@@ -33,7 +33,7 @@ function StatusBadge({ status }) {
 
 function TabBtn({ active, onClick, children }) {
   return (
-    <button onClick={onClick} style={{ border: 'none', background: active ? C.accentMuted : 'transparent', color: active ? C.accent : C.text2, borderRadius: 4, padding: '5px 10px', fontSize: 11, fontWeight: 500, cursor: 'pointer' }}>
+    <button onClick={onClick} style={{ border: 'none', background: active ? C.accentMuted : 'transparent', color: active ? C.accent : C.text2, borderRadius: 5, padding: '8px 14px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
       {children}
     </button>
   );
@@ -118,18 +118,20 @@ export default function HoursView() {
   }
 
   const maxProjectHours = Math.max(...(stats?.by_project || []).map(p => p.hours), 1);
+  const inputStyle = { ...iS, fontSize: 14, padding: '10px 12px', minHeight: 42 };
+  const labelStyle = { fontSize: 11, marginBottom: 7 };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderBottom: `1px solid ${C.border}`, background: C.bg1, flexShrink: 0, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 24px', borderBottom: `1px solid ${C.border}`, background: C.bg1, flexShrink: 0, flexWrap: 'wrap' }}>
         <TabBtn active={tab === 'load'} onClick={() => setTab('load')}>Carga</TabBtn>
         <TabBtn active={tab === 'history'} onClick={() => setTab('history')}>Historial de Horas</TabBtn>
         <TabBtn active={tab === 'stats'} onClick={() => setTab('stats')}>Estadísticas</TabBtn>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
-          <select value={month} onChange={e => setPeriod(p => ({ ...p, month: Number(e.target.value) }))} style={{ ...iS, width: 118, padding: '4px 8px', fontSize: 11 }}>
+          <select value={month} onChange={e => setPeriod(p => ({ ...p, month: Number(e.target.value) }))} style={{ ...iS, width: 142, padding: '8px 10px', fontSize: 13 }}>
             {Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{new Date(2026, i, 1).toLocaleString('es-AR', { month: 'long' })}</option>)}
           </select>
-          <input type="number" value={year} onChange={e => setPeriod(p => ({ ...p, year: Number(e.target.value) || p.year }))} style={{ ...iS, width: 82, padding: '4px 8px', fontSize: 11 }} />
+          <input type="number" value={year} onChange={e => setPeriod(p => ({ ...p, year: Number(e.target.value) || p.year }))} style={{ ...iS, width: 96, padding: '8px 10px', fontSize: 13 }} />
         </div>
       </div>
 
@@ -137,38 +139,40 @@ export default function HoursView() {
       {ok && <div style={{ padding: '8px 18px', color: C.green, fontSize: 11, borderBottom: `1px solid ${C.border}` }}>{ok}</div>}
 
       {tab === 'load' && (
-        <div style={{ flex: 1, overflowY: 'auto', padding: 22, maxWidth: 620, width: '100%', margin: '0 auto' }}>
-          <div style={{ fontSize: 14, fontWeight: 500, color: C.text0, marginBottom: 1 }}>Carga de Horas</div>
-          <div style={{ fontSize: 11, color: C.text2, marginBottom: 20 }}>Registrá horas trabajadas por proyecto</div>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 36px', maxWidth: 860, width: '100%', margin: '0 auto' }}>
+          <div style={{ fontSize: 22, fontWeight: 650, color: C.text0, marginBottom: 4 }}>Carga de Horas</div>
+          <div style={{ fontSize: 14, color: C.text2, marginBottom: 28 }}>Registrá horas trabajadas por proyecto</div>
 
-          <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 8 }}>
-              <FormField label="Fecha">
-                <input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} style={iS} />
+          <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+              <FormField label="Fecha" labelStyle={labelStyle}>
+                <input type="date" value={form.date} onChange={e => setForm(p => ({ ...p, date: e.target.value }))} style={inputStyle} />
               </FormField>
-              <FormField label="Proyecto">
-                <select value={projectId} onChange={e => setForm(p => ({ ...p, project_id: e.target.value }))} style={iS}>
+              <FormField label="Proyecto" labelStyle={labelStyle}>
+                <select value={projectId} onChange={e => setForm(p => ({ ...p, project_id: e.target.value }))} style={inputStyle}>
                   {activeProjects.map(q => <option key={q.id} value={q.id}>{q.name}</option>)}
                 </select>
               </FormField>
             </div>
 
-            <FormField label={`Cantidad de horas · ${Number(form.hours).toFixed(2)} h`}>
-              <input type="range" min="1" max="96" step="1" value={Math.round(Number(form.hours) * 4)} onChange={e => setForm(p => ({ ...p, hours: Number(e.target.value) / 4 }))} style={{ width: '100%' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: C.text2, marginTop: 4 }}>
+            <FormField label={`Cantidad de horas · ${Number(form.hours).toFixed(2)} h`} labelStyle={labelStyle}>
+              <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: '14px 16px' }}>
+                <input type="range" min="1" max="96" step="1" value={Math.round(Number(form.hours) * 4)} onChange={e => setForm(p => ({ ...p, hours: Number(e.target.value) / 4 }))} style={{ width: '100%', height: 24 }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.text2, marginTop: 8 }}>
                 <span>0.25 h</span>
                 <span>Total del día: {dailyTotal.toFixed(2)} h</span>
                 <span>24 h</span>
+                </div>
               </div>
             </FormField>
 
-            <FormField label="Descripción">
-              <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={5} placeholder="Detalle del trabajo realizado…" style={{ ...iS, resize: 'vertical', lineHeight: 1.5 }} />
+            <FormField label="Descripción" labelStyle={labelStyle}>
+              <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={7} placeholder="Detalle del trabajo realizado…" style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.55 }} />
             </FormField>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-              <button type="button" onClick={() => setForm({ date: todayLocal(), project_id: '', hours: 1, description: '' })} style={{ background: 'transparent', border: `1px solid ${C.border}`, color: C.text2, fontSize: 11, padding: '6px 14px', borderRadius: 4, cursor: 'pointer' }}>Limpiar</button>
-              <button disabled={saving} style={{ background: saving ? C.bg3 : C.accent, border: 'none', color: '#fff', fontSize: 11, fontWeight: 500, padding: '6px 16px', borderRadius: 4, cursor: saving ? 'default' : 'pointer' }}>
+              <button type="button" onClick={() => setForm({ date: todayLocal(), project_id: '', hours: 1, description: '' })} style={{ background: 'transparent', border: `1px solid ${C.border}`, color: C.text2, fontSize: 13, padding: '10px 18px', borderRadius: 5, cursor: 'pointer' }}>Limpiar</button>
+              <button disabled={saving} style={{ background: saving ? C.bg3 : C.accent, border: 'none', color: '#fff', fontSize: 13, fontWeight: 600, padding: '10px 20px', borderRadius: 5, cursor: saving ? 'default' : 'pointer' }}>
                 {saving ? 'Guardando…' : 'Guardar horas'}
               </button>
             </div>

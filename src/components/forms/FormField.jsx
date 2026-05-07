@@ -1,6 +1,6 @@
 import { C } from '../../styles/tokens';
 
-export default function FormField({ label, children }) {
+export default function FormField({ label, children, labelStyle }) {
   return (
     <div>
       <label
@@ -12,6 +12,7 @@ export default function FormField({ label, children }) {
           marginBottom: 4,
           textTransform: 'uppercase',
           letterSpacing: '0.08em',
+          ...labelStyle,
         }}
       >
         {label}
