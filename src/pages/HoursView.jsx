@@ -291,7 +291,9 @@ function HourDetail({ entry, onClose }) {
 
         <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: 18 }}>
           <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: C.text2, marginBottom: 10 }}>Descripción del trabajo</div>
-          <div style={{ color: C.text0, fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{entry.description}</div>
+          <div style={{ color: C.text0, fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word', maxHeight: 260, overflowY: 'auto', paddingRight: 8 }}>
+            {entry.description}
+          </div>
         </div>
 
         {entry.rejection_comment && (
