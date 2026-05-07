@@ -157,7 +157,7 @@ export default function HoursView() {
               </FormField>
             </div>
 
-            <FormField label={`Cantidad de horas · ${Number(form.hours).toFixed(2)} h`} labelStyle={labelStyle}>
+            <FormField label={`Cantidad de horas · ${Number(form.hours).toFixed(2)} h`} labelStyle={{ ...labelStyle, fontSize: 14, color: C.text0, letterSpacing: '0.04em' }}>
               <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 6, padding: '14px 16px' }}>
                 <input type="range" min="1" max="96" step="1" value={Math.round(Number(form.hours) * 4)} onChange={e => setForm(p => ({ ...p, hours: Number(e.target.value) / 4 }))} style={{ width: '100%', height: 24 }} />
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: C.text2, marginTop: 8 }}>
