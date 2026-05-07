@@ -5,7 +5,10 @@ export default function StatusBadge({ status }) {
   return (
     <span
       style={{
+        display: 'flex',
+        alignItems: 'center',
         fontSize: 10,
+        lineHeight: 1,
         fontWeight: 500,
         color: `var(${c.varColor})`,
         letterSpacing: '0.01em',

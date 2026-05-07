@@ -6,10 +6,11 @@ export default function PriBadge({ priority }) {
   return (
     <span
       style={{
-        display: 'inline-flex',
+        display: 'flex',
         alignItems: 'center',
         gap: 4,
         fontSize: 11,
+        lineHeight: 1,
         color: `var(${c.varColor})`,
       }}
     >
