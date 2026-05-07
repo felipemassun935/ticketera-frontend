@@ -127,12 +127,14 @@ export default function HoursView() {
         <TabBtn active={tab === 'load'} onClick={() => setTab('load')}>Carga</TabBtn>
         <TabBtn active={tab === 'history'} onClick={() => setTab('history')}>Historial de Horas</TabBtn>
         <TabBtn active={tab === 'stats'} onClick={() => setTab('stats')}>Estadísticas</TabBtn>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
-          <select value={month} onChange={e => setPeriod(p => ({ ...p, month: Number(e.target.value) }))} style={{ ...iS, width: 142, padding: '8px 10px', fontSize: 13 }}>
-            {Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{new Date(2026, i, 1).toLocaleString('es-AR', { month: 'long' })}</option>)}
-          </select>
-          <input type="number" value={year} onChange={e => setPeriod(p => ({ ...p, year: Number(e.target.value) || p.year }))} style={{ ...iS, width: 96, padding: '8px 10px', fontSize: 13 }} />
-        </div>
+        {tab !== 'load' && (
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+            <select value={month} onChange={e => setPeriod(p => ({ ...p, month: Number(e.target.value) }))} style={{ ...iS, width: 142, padding: '8px 10px', fontSize: 13 }}>
+              {Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{new Date(2026, i, 1).toLocaleString('es-AR', { month: 'long' })}</option>)}
+            </select>
+            <input type="number" value={year} onChange={e => setPeriod(p => ({ ...p, year: Number(e.target.value) || p.year }))} style={{ ...iS, width: 96, padding: '8px 10px', fontSize: 13 }} />
+          </div>
+        )}
       </div>
 
       {error && <div style={{ padding: '8px 18px', color: C.red, fontSize: 11, borderBottom: `1px solid ${C.border}` }}>{error}</div>}
