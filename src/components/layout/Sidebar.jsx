@@ -57,7 +57,7 @@ export default function Sidebar({ active, setActive, tickets, role }) {
   return (
     <div style={{ width: 200, background: C.bg1, borderRight: `1px solid ${C.border}`, display: 'flex', flexDirection: 'column', height: '100%', flexShrink: 0 }}>
       {/* Brand */}
-      <div style={{ padding: '16px 14px 13px', borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ height: 57, boxSizing: 'border-box', padding: '0 14px', display: 'flex', alignItems: 'center', borderBottom: `1px solid ${C.border}` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <div style={{ width: 28, height: 28, borderRadius: 6, background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

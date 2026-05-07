@@ -6,7 +6,7 @@ export default function TopBar({ user, title, theme, toggleTheme, onLogout }) {
   return (
     <div
       style={{
-        height: 48,
+        height: 57,
         display: 'flex',
         alignItems: 'center',
         padding: '0 18px',
