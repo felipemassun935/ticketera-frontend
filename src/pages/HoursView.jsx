@@ -118,7 +118,7 @@ export default function HoursView() {
   }
 
   const maxProjectHours = Math.max(...(stats?.by_project || []).map(p => p.hours), 1);
-  const inputStyle = { ...iS, fontSize: 14, padding: '10px 12px', minHeight: 42 };
+  const inputStyle = { ...iS, fontSize: 14, padding: '10px 12px', height: 42, minHeight: 42, boxSizing: 'border-box' };
   const labelStyle = { fontSize: 11, marginBottom: 7 };
 
   return (
