@@ -128,27 +128,27 @@ export default function InboxView({ tickets, onSelect, role, active, loading }) 
             <div
               key={t.id}
               onClick={() => onSelect(t)}
-              style={{ display: 'grid', gridTemplateColumns: COLS, padding: '9px 18px', borderBottom: `1px solid ${C.border}`, cursor: 'pointer', transition: 'background 0.08s', background: i % 2 === 0 ? 'transparent' : 'rgba(128,100,80,0.03)' }}
+              style={{ display: 'grid', gridTemplateColumns: COLS, alignItems: 'center', padding: '9px 18px', borderBottom: `1px solid ${C.border}`, cursor: 'pointer', transition: 'background 0.08s', background: i % 2 === 0 ? 'transparent' : 'rgba(128,100,80,0.03)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg2)')}
               onMouseLeave={e => (e.currentTarget.style.background = i % 2 === 0 ? 'transparent' : 'rgba(128,100,80,0.03)')}
             >
-              <div style={{ fontSize: 10, fontFamily: 'IBM Plex Mono', color: C.text2, paddingTop: 1 }}>{t.id}</div>
+              <div style={{ fontSize: 10, fontFamily: 'IBM Plex Mono', color: C.text2 }}>{t.id}</div>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 500, color: C.text0, marginBottom: 3, lineHeight: 1.35 }}>{t.title}</div>
                 <div style={{ display: 'flex', gap: 4 }}>
                   {(t.tags || []).map(tag => <span key={tag} style={{ fontSize: 9, color: C.text2, padding: '0 4px', border: `1px solid ${C.border}`, borderRadius: 2 }}>#{tag}</span>)}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, alignSelf: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <Avatar name={t.requester_name} size={18} />
                 <span style={{ fontSize: 11, color: C.text1 }}>{t.requester_name.split(' ')[0]}</span>
               </div>
-              <div style={{ alignSelf: 'center' }}>
+              <div>
                 {q && <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: C.text1 }}><QDot qid={q.id} size={6} />{q.name}</span>}
               </div>
-              <div style={{ alignSelf: 'center' }}><PriBadge priority={t.priority} /></div>
-              <div style={{ alignSelf: 'center' }}><StatusBadge status={t.status} /></div>
-              <div style={{ alignSelf: 'center', fontSize: 10, color: `var(${sc})`, fontWeight: sc !== '--text1' ? 500 : 400, display: 'flex', alignItems: 'center', gap: 3 }}>
+              <div><PriBadge priority={t.priority} /></div>
+              <div><StatusBadge status={t.status} /></div>
+              <div style={{ fontSize: 10, color: `var(${sc})`, fontWeight: sc !== '--text1' ? 500 : 400, display: 'flex', alignItems: 'center', gap: 3 }}>
                 {sc !== '--text1' && <Dot varColor={sc} size={4} />}
                 {slaLabel(t.sla_deadline, t.status, t.sla_paused_at)}
               </div>
