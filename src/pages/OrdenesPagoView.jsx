@@ -13,8 +13,8 @@ function StatusBadge({ estado }) {
 
 const STAT_KEYS = [
   { key: 'pendiente_aprobacion', label: 'Pendientes',  varColor: '--text2'  },
-  { key: 'aprobada',             label: 'Aprobadas',   varColor: '--blue'   },
-  { key: 'en_proceso',           label: 'En proceso',  varColor: '--accent' },
+  { key: 'confirmada',           label: 'Confirmadas', varColor: '--blue'   },
+  { key: 'en_camino',            label: 'En camino',   varColor: '--accent' },
   { key: 'entregada',            label: 'Entregadas',  varColor: '--green'  },
 ];
 
@@ -67,7 +67,9 @@ export default function OrdenesPagoView({ role }) {
     rows = rows.filter(op => [op.id, op.descripcion, op.solicitante, op.clienteAsociado].join(' ').toLowerCase().includes(q));
   }
 
-  const totalEntregado = ops.filter(op => op.estado === 'entregada').reduce((s, op) => s + (Number(op.costoFinal) || (Number(op.cantidad) || 0) * (Number(op.montoUnitario) || 0)), 0);
+  const totalEntregado = ops
+    .filter(op => ['en_camino', 'entregada'].includes(op.estado))
+    .reduce((s, op) => s + (Number(op.costoFinal) || (Number(op.cantidad) || 0) * (Number(op.montoUnitario) || 0)), 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>

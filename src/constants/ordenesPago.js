@@ -1,17 +1,15 @@
 export const OP_STATUS_CFG = {
-  pendiente_aprobacion: { label: 'Pendiente aprobación', varColor: '--text2'  },
-  aprobada:             { label: 'Aprobada',              varColor: '--blue'   },
-  rechazada:            { label: 'Rechazada',             varColor: '--red'    },
-  en_proceso:           { label: 'En proceso',            varColor: '--accent' },
-  entregada:            { label: 'Entregada',             varColor: '--green'  },
-  cancelada:            { label: 'Cancelada',             varColor: '--text1'  },
+  pendiente_aprobacion: { label: 'Pendiente',   varColor: '--text2'  },
+  confirmada:           { label: 'Confirmada',  varColor: '--blue'   },
+  en_camino:            { label: 'En camino',   varColor: '--accent' },
+  entregada:            { label: 'Entregada',   varColor: '--green'  },
+  cancelada:            { label: 'Cancelada',   varColor: '--red'    },
 };
 
 export const OP_TRANSITIONS = {
-  pendiente_aprobacion: ['aprobada', 'rechazada', 'cancelada'],
-  aprobada:             ['en_proceso', 'cancelada'],
-  rechazada:            [],
-  en_proceso:           ['entregada', 'cancelada'],
+  pendiente_aprobacion: ['confirmada', 'cancelada'],
+  confirmada:           ['en_camino',  'cancelada'],
+  en_camino:            ['entregada',  'cancelada'],
   entregada:            [],
   cancelada:            [],
 };
