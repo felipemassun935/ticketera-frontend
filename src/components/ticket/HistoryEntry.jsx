@@ -29,7 +29,7 @@ export default function HistoryEntry({ entry, isLast }) {
         <Icon d={cfg.d} size={11} varColor={cfg.vc} />
       </div>
 
-      <div style={{ flex: 1, paddingTop: 2, minWidth: 0 }}>
+      <div style={{ flex: 1, paddingTop: 2, minWidth: 0, overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 4 }}>
           <span style={{ fontSize: 12, fontWeight: 500, color: C.text0 }}>{entry.agent_name}</span>
           <span style={{ fontSize: 10, color: C.text2 }}>{fmtTs(entry.created_at)}</span>
@@ -73,7 +73,7 @@ export default function HistoryEntry({ entry, isLast }) {
         )}
 
         {entry.comment && (
-          <div style={{ fontSize: 12, color: C.text1, lineHeight: 1.65, background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 5, padding: '7px 10px', marginTop: 2, whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+          <div style={{ fontSize: 12, color: C.text1, lineHeight: 1.65, background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 5, padding: '7px 10px', marginTop: 2, wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
             {entry.comment}
           </div>
         )}
