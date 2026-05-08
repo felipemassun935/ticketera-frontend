@@ -49,7 +49,7 @@ export default function Sidebar({ active, setActive, tickets, role }) {
     { id: 'kb',     label: 'Conocimiento' },
     ...(role !== 'customer' ? [
       { id: 'templates', label: 'Plantillas' },
-      { id: 'sla',       label: 'SLA / Reglas' },
+      { id: 'sla',       label: 'SLA / Prioridades' },
       { id: 'reports',   label: 'Reportes' },
     ] : []),
   ];

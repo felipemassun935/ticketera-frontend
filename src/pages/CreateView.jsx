@@ -1,23 +1,17 @@
 import { useState } from 'react';
 import { useAdmin } from '../context/AdminContext';
-import { PRI_CFG, CATEGORIES, SLA_MAP } from '../constants';
+import { CATEGORIES, SLA_MAP } from '../constants';
 import { api } from '../services/api';
 import { C, iS } from '../styles/tokens';
 import Avatar from '../components/ui/Avatar';
 import FormField from '../components/forms/FormField';
 
-function getSlaForPriority(slaRules, priority) {
-  const match = slaRules.find(r => r.active && r.priority === priority && (!r.dept || r.dept === 'all'))
-             || slaRules.find(r => r.active && r.priority === priority);
-  if (match) return [match.r1 || '—', match.res || '—'];
-  return SLA_MAP[priority] ?? ['—', '—'];
-}
-
-const EMPTY = { title: '', queue_id: '', category: 'Infraestructura', priority: 'medium', desc: '', tags: '', assignee_id: '' };
+const EMPTY_FORM = { title: '', queue_id: '', category: 'Infraestructura', priority: '', desc: '', tags: '', assignee_id: '' };
 
 export default function CreateView({ role, onCreated }) {
-  const { queues, users, slaRules } = useAdmin();
-  const [form,    setForm]    = useState(EMPTY);
+  const { queues, users, priorities } = useAdmin();
+  const activePriorities = priorities.filter(p => p.active);
+  const [form,    setForm]    = useState(EMPTY_FORM);
   const [created, setCreated] = useState(null);
   const [saving,  setSaving]  = useState(false);
   const [error,   setError]   = useState('');
@@ -63,7 +57,7 @@ export default function CreateView({ role, onCreated }) {
           ID: <span style={{ fontFamily: 'IBM Plex Mono', color: C.accent }}>{created.id}</span>
         </div>
         <button
-          onClick={() => { setCreated(null); setForm(EMPTY); }}
+          onClick={() => { setCreated(null); setForm(EMPTY_FORM); }}
           style={{ background: 'var(--accent)', border: 'none', color: '#fff', fontSize: 11, fontWeight: 500, padding: '6px 18px', borderRadius: 4, cursor: 'pointer', marginTop: 4 }}
         >
           Crear otro
@@ -96,8 +90,8 @@ export default function CreateView({ role, onCreated }) {
             </select>
           </FormField>
           <FormField label="Prioridad">
-            <select value={form.priority} onChange={e => f('priority', e.target.value)} style={{ ...iS, width: '100%' }}>
-              {Object.entries(PRI_CFG).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+            <select value={form.priority || activePriorities[0]?.id || ''} onChange={e => f('priority', e.target.value)} style={{ ...iS, width: '100%' }}>
+              {activePriorities.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
             </select>
           </FormField>
         </div>
@@ -128,18 +122,27 @@ export default function CreateView({ role, onCreated }) {
         </FormField>
 
         {(() => {
-          const [slaR1, slaRes] = getSlaForPriority(slaRules, form.priority);
+          const priId = form.priority || activePriorities[0]?.id;
+          const pri   = priorities.find(p => p.id === priId);
+          if (!pri) return null;
+          const slaValues = [['1ª Respuesta', pri.r1], ['Resolución', pri.res], ['Escalar', pri.esc]].filter(([, v]) => v);
           return (
             <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 5, padding: '10px 12px' }}>
-              <div style={{ fontSize: 9, color: C.text2, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>SLA estimado — {PRI_CFG[form.priority]?.label}</div>
-              <div style={{ display: 'flex', gap: 20 }}>
-                {[['1ª Respuesta', slaR1], ['Resolución', slaRes]].map(([l, v]) => (
-                  <div key={l}>
-                    <div style={{ fontSize: 10, color: C.text2, marginBottom: 2 }}>{l}</div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: C.accent }}>{v}</div>
-                  </div>
-                ))}
+              <div style={{ fontSize: 9, color: C.text2, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>
+                SLA estimado — <span style={{ color: pri.color }}>{pri.label}</span>
               </div>
+              {slaValues.length > 0 ? (
+                <div style={{ display: 'flex', gap: 20 }}>
+                  {slaValues.map(([l, v]) => (
+                    <div key={l}>
+                      <div style={{ fontSize: 10, color: C.text2, marginBottom: 2 }}>{l}</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: pri.color }}>{v}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ fontSize: 11, color: C.text2 }}>Sin tiempos de SLA configurados para esta prioridad.</div>
+              )}
             </div>
           );
         })()}
@@ -147,7 +150,7 @@ export default function CreateView({ role, onCreated }) {
         {error && <div style={{ fontSize: 11, color: 'var(--red)' }}>{error}</div>}
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-          <button onClick={() => setForm(EMPTY)} style={{ background: 'transparent', border: `1px solid ${C.border}`, color: C.text2, fontSize: 11, padding: '6px 14px', borderRadius: 4, cursor: 'pointer' }}>Limpiar</button>
+          <button onClick={() => setForm(EMPTY_FORM)} style={{ background: 'transparent', border: `1px solid ${C.border}`, color: C.text2, fontSize: 11, padding: '6px 14px', borderRadius: 4, cursor: 'pointer' }}>Limpiar</button>
           <button
             onClick={submit} disabled={!isValid || saving}
             style={{ background: isValid && !saving ? 'var(--accent)' : C.bg3, border: 'none', color: isValid && !saving ? '#fff' : C.text2, fontSize: 11, fontWeight: 500, padding: '6px 16px', borderRadius: 4, cursor: isValid && !saving ? 'pointer' : 'default', transition: 'all 0.15s' }}

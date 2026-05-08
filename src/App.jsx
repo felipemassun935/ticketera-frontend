@@ -32,6 +32,7 @@ const VIEW_TITLES = {
   reports:       'Reportes',
   hours:         'Carga de Horas',
   admin_hours:   'Revisión de Horas',
+  sla:           'SLA / Prioridades',
   admin_queues:  'Administración · Bandejas',
   admin_users:   'Administración · Usuarios',
   admin_roles:   'Administración · Roles',

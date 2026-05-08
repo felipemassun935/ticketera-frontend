@@ -4,20 +4,23 @@ import { api } from '../services/api';
 const AdminCtx = createContext(null);
 
 export function AdminProvider({ children }) {
-  const [queues,    setQueues]    = useState([]);
-  const [users,     setUsers]     = useState([]);
-  const [roles,     setRoles]     = useState([]);
-  const [slaRules,  setSlaRules]  = useState([]);
+  const [queues,     setQueues]     = useState([]);
+  const [users,      setUsers]      = useState([]);
+  const [roles,      setRoles]      = useState([]);
+  const [slaRules,   setSlaRules]   = useState([]);
+  const [priorities, setPriorities] = useState([]);
 
   const loadAdmin = useCallback(async () => {
-    const [qRes, rRes, sRes] = await Promise.all([
+    const [qRes, rRes, sRes, pRes] = await Promise.all([
       api.get('/queues'),
       api.get('/roles'),
       api.get('/sla-rules'),
+      api.get('/priorities'),
     ]);
     setQueues(qRes.queues);
     setRoles(rRes.roles);
     setSlaRules(sRes.rules);
+    setPriorities(pRes.priorities);
     api.get('/users').then(r => setUsers(r.users)).catch(() => {});
   }, []);
 
@@ -57,6 +60,24 @@ export function AdminProvider({ children }) {
     setUsers(us => us.map(x => x.id === id ? user : x));
   }
 
+  // ── Priorities ────────────────────────────────────────────────
+  async function addPriority(p) {
+    const { priority } = await api.post('/priorities', p);
+    setPriorities(ps => [...ps, priority].sort((a, b) => a.sort_order - b.sort_order));
+  }
+  async function updatePriority(p) {
+    const { priority } = await api.patch(`/priorities/${p.id}`, p);
+    setPriorities(ps => ps.map(x => x.id === p.id ? priority : x));
+  }
+  async function removePriority(id) {
+    await api.del(`/priorities/${id}`);
+    setPriorities(ps => ps.filter(x => x.id !== id));
+  }
+  async function togglePriority(id) {
+    const { priority } = await api.patch(`/priorities/${id}/toggle`);
+    setPriorities(ps => ps.map(x => x.id === id ? priority : x));
+  }
+
   // ── SLA Rules ─────────────────────────────────────────────────
   async function addSlaRule(r) {
     const { rule } = await api.post('/sla-rules', r);
@@ -91,10 +112,11 @@ export function AdminProvider({ children }) {
 
   return (
     <AdminCtx.Provider value={{
-      queues,    addQueue,    updateQueue,    removeQueue,    toggleQueue,
-      users,     addUser,     updateUser,     removeUser,     toggleUser,
-      roles,     addRole,     updateRole,     removeRole,
-      slaRules,  addSlaRule,  updateSlaRule,  removeSlaRule,  toggleSlaRule,
+      queues,      addQueue,      updateQueue,      removeQueue,      toggleQueue,
+      users,       addUser,       updateUser,       removeUser,       toggleUser,
+      roles,       addRole,       updateRole,       removeRole,
+      slaRules,    addSlaRule,    updateSlaRule,    removeSlaRule,    toggleSlaRule,
+      priorities,  addPriority,  updatePriority,  removePriority,  togglePriority,
       loadAdmin,
     }}>
       {children}
