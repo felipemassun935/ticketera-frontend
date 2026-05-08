@@ -1,19 +1,14 @@
-// localStorage-based persistence for Órdenes de Pago.
-// Replace load/save with real API calls when the backend is ready.
-
-const KEY = 'ticketera_ops';
+const KEY = 'ticketera_ops_v2';
 
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
   catch { return []; }
 }
 
-function save(ops) {
-  localStorage.setItem(KEY, JSON.stringify(ops));
-}
+function save(ops) { localStorage.setItem(KEY, JSON.stringify(ops)); }
 
 function nextId() {
-  const ops  = load();
+  const ops = load();
   const year = new Date().getFullYear();
   const num  = String(ops.length + 1).padStart(4, '0');
   return `OP-${year}-${num}`;
@@ -24,9 +19,7 @@ export const opService = {
     return [...load()].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
   },
 
-  get(id) {
-    return load().find(op => op.id === id) || null;
-  },
+  get(id) { return load().find(op => op.id === id) || null; },
 
   create(data) {
     const ops = load();
@@ -34,12 +27,14 @@ export const opService = {
     const op = {
       ...data,
       id: nextId(),
-      estadoPago: 'pendiente_aprobacion',
+      estado: 'pendiente_aprobacion',
+      costoFinal: '', tipoPago: '', detallePago: '', fechaEntrega: '',
       history: [{
+        type: 'created',
         usuario: data.solicitante || 'Sistema',
         accion: 'Orden creada',
+        nota: `Orden de compra creada. Producto: ${data.descripcion}`,
         fecha: now,
-        cambio: 'Orden de pago creada con estado Pendiente aprobación',
       }],
       createdAt: now,
       updatedAt: now,
@@ -52,32 +47,49 @@ export const opService = {
   update(id, data) {
     const ops = load();
     const idx = ops.findIndex(op => op.id === id);
-    if (idx === -1) throw new Error('OP no encontrada');
-    ops[idx] = { ...ops[idx], ...data, updatedAt: new Date().toISOString() };
+    if (idx === -1) throw new Error('Orden no encontrada');
+    const now = new Date().toISOString();
+    ops[idx] = { ...ops[idx], ...data, updatedAt: now };
+    ops[idx].history = [
+      ...(ops[idx].history || []),
+      { type: 'edit', usuario: data._usuario || 'Usuario', accion: 'Datos actualizados', nota: 'Se editaron los datos de la orden.', fecha: now },
+    ];
     save(ops);
     return ops[idx];
   },
 
-  delete(id) {
-    save(load().filter(op => op.id !== id));
-  },
-
-  changeStatus(id, newStatus, usuario, nota = '') {
+  updateSeguimiento(id, seguimiento, usuario) {
     const ops = load();
     const idx = ops.findIndex(op => op.id === id);
-    if (idx === -1) throw new Error('OP no encontrada');
-    const oldLabel = ops[idx].estadoPago;
-    ops[idx].estadoPago = newStatus;
+    if (idx === -1) throw new Error('Orden no encontrada');
+    const now = new Date().toISOString();
+    const cambios = Object.entries(seguimiento)
+      .filter(([, v]) => v !== undefined && v !== '')
+      .map(([k, v]) => {
+        const labels = { fechaEntrega: 'Fecha entrega', costoFinal: 'Costo final', tipoPago: 'Tipo de pago', detallePago: 'Detalle' };
+        return `${labels[k] || k}: ${v}`;
+      }).join(' · ');
+    ops[idx] = { ...ops[idx], ...seguimiento, updatedAt: now };
     ops[idx].history = [
       ...(ops[idx].history || []),
-      {
-        usuario,
-        accion: 'Cambio de estado',
-        fecha: new Date().toISOString(),
-        cambio: `${usuario} cambió estado de "${oldLabel}" a "${newStatus}"${nota ? '. ' + nota : ''}`,
-      },
+      { type: 'seguimiento', usuario, accion: 'Seguimiento actualizado', nota: cambios || 'Datos de seguimiento actualizados.', fecha: now },
     ];
-    ops[idx].updatedAt = new Date().toISOString();
+    save(ops);
+    return ops[idx];
+  },
+
+  changeStatus(id, newEstado, usuario, nota = '') {
+    const ops = load();
+    const idx = ops.findIndex(op => op.id === id);
+    if (idx === -1) throw new Error('Orden no encontrada');
+    const oldLabel = ops[idx].estado;
+    const now = new Date().toISOString();
+    ops[idx].estado = newEstado;
+    ops[idx].history = [
+      ...(ops[idx].history || []),
+      { type: 'estado', usuario, accion: 'Cambio de estado', nota: `${oldLabel} → ${newEstado}${nota ? '. ' + nota : ''}`, fecha: now },
+    ];
+    ops[idx].updatedAt = now;
     save(ops);
     return ops[idx];
   },
@@ -85,20 +97,23 @@ export const opService = {
   addNote(id, usuario, nota) {
     const ops = load();
     const idx = ops.findIndex(op => op.id === id);
-    if (idx === -1) throw new Error('OP no encontrada');
+    if (idx === -1) throw new Error('Orden no encontrada');
+    const now = new Date().toISOString();
     ops[idx].history = [
       ...(ops[idx].history || []),
-      { usuario, accion: 'Nota', fecha: new Date().toISOString(), cambio: nota },
+      { type: 'nota', usuario, accion: 'Observación', nota, fecha: now },
     ];
-    ops[idx].updatedAt = new Date().toISOString();
+    ops[idx].updatedAt = now;
     save(ops);
     return ops[idx];
   },
 
+  delete(id) { save(load().filter(op => op.id !== id)); },
+
   duplicate(id) {
     const src = this.get(id);
-    if (!src) throw new Error('OP no encontrada');
-    const { id: _id, createdAt: _c, updatedAt: _u, history: _h, estadoPago: _e, ...rest } = src;
+    if (!src) throw new Error('Orden no encontrada');
+    const { id: _id, createdAt: _c, updatedAt: _u, history: _h, estado: _e, costoFinal: _cf, tipoPago: _tp, detallePago: _dp, fechaEntrega: _fe, ...rest } = src;
     return this.create(rest);
   },
 };
