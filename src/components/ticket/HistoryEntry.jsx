@@ -73,7 +73,7 @@ export default function HistoryEntry({ entry, isLast }) {
         )}
 
         {entry.comment && (
-          <div style={{ fontSize: 12, color: C.text1, lineHeight: 1.65, background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 5, padding: '7px 10px', marginTop: 2 }}>
+          <div style={{ fontSize: 12, color: C.text1, lineHeight: 1.65, background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: 5, padding: '7px 10px', marginTop: 2, whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
             {entry.comment}
           </div>
         )}
