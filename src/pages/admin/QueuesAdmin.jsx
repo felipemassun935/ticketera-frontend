@@ -42,15 +42,16 @@ function ConfirmDelete({ name, onConfirm, onCancel }) {
 
 export default function QueuesAdmin() {
   const { queues, addQueue, updateQueue, removeQueue, toggleQueue, users } = useAdmin();
-  const [modal,   setModal]   = useState(null);
-  const [form,    setForm]    = useState(EMPTY);
-  const [confirm, setConfirm] = useState(null);
-  const [error,   setError]   = useState('');
+  const [modal,       setModal]       = useState(null);
+  const [form,        setForm]        = useState(EMPTY);
+  const [confirm,     setConfirm]     = useState(null);
+  const [error,       setError]       = useState('');
+  const [deleteError, setDeleteError] = useState('');
 
   const agents = users.filter(u => ['admin','agent'].includes(u.role_id) && u.active);
 
-  function openAdd()   { setForm(EMPTY); setModal('add'); setError(''); }
-  function openEdit(q) { setForm({ id: q.id, name: q.name, owner_name: q.owner_name || '', color: q.color }); setModal('edit'); setError(''); }
+  function openAdd()   { setForm(EMPTY); setModal('add'); setError(''); setDeleteError(''); }
+  function openEdit(q) { setForm({ id: q.id, name: q.name, owner_name: q.owner_name || '', color: q.color }); setModal('edit'); setError(''); setDeleteError(''); }
   function closeModal(){ setModal(null); setError(''); }
 
   async function save() {
@@ -88,25 +89,53 @@ export default function QueuesAdmin() {
           ))}
         </div>
 
-        {queues.map((q, i) => (
-          <div key={q.id} style={{ display: 'grid', gridTemplateColumns: COLS, padding: '10px 14px', gap: 12, alignItems: 'center', borderBottom: i < queues.length - 1 ? `1px solid ${C.border}` : 'none', opacity: q.active ? 1 : 0.45, transition: 'opacity 0.2s' }}>
-            <span style={{ width: 10, height: 10, borderRadius: '50%', background: q.color, display: 'inline-block', flexShrink: 0 }} />
-            <span style={{ fontSize: 12, fontWeight: 500, color: C.text0 }}>{q.name}</span>
-            <span style={{ fontSize: 11, color: C.text1 }}>{q.owner_name || '—'}</span>
-            <span style={{ fontSize: 11, color: C.text2 }}>{q.ticket_count ?? '—'}</span>
-            <Toggle on={q.active} onToggle={() => toggleQueue(q.id)} />
-            <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
-              {confirm === q.id ? (
-                <ConfirmDelete name={q.name} onConfirm={async () => { try { await removeQueue(q.id); } catch {} setConfirm(null); }} onCancel={() => setConfirm(null)} />
-              ) : (
-                <>
-                  <ActionBtn label="Editar"    onClick={() => openEdit(q)} />
-                  <ActionBtn label="Eliminar"  danger onClick={() => setConfirm(q.id)} />
-                </>
-              )}
-            </div>
+        {deleteError && (
+          <div style={{ padding: '8px 14px', fontSize: 11, color: 'var(--red)', background: 'rgba(200,80,80,0.08)', borderBottom: `1px solid ${C.border}` }}>
+            {deleteError}
           </div>
-        ))}
+        )}
+
+        {queues.map((q, i) => {
+          const border = i < queues.length - 1 ? `1px solid ${C.border}` : 'none';
+          if (confirm === q.id) {
+            return (
+              <div key={q.id} style={{ padding: '10px 14px', borderBottom: border, display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(200,80,80,0.04)' }}>
+                <span style={{ fontSize: 11, color: C.text1, flex: 1 }}>
+                  ¿Eliminar bandeja <b style={{ color: C.text0 }}>{q.name}</b>?
+                </span>
+                <button
+                  onClick={async () => {
+                    setDeleteError('');
+                    try { await removeQueue(q.id); setConfirm(null); }
+                    catch (e) { setDeleteError(e.message); setConfirm(null); }
+                  }}
+                  style={{ fontSize: 10, fontWeight: 500, color: '#fff', background: 'var(--red)', border: 'none', borderRadius: 3, padding: '3px 10px', cursor: 'pointer' }}
+                >
+                  Eliminar
+                </button>
+                <button
+                  onClick={() => setConfirm(null)}
+                  style={{ fontSize: 10, color: C.text2, background: 'transparent', border: `1px solid ${C.border}`, borderRadius: 3, padding: '3px 10px', cursor: 'pointer' }}
+                >
+                  Cancelar
+                </button>
+              </div>
+            );
+          }
+          return (
+            <div key={q.id} style={{ display: 'grid', gridTemplateColumns: COLS, padding: '10px 14px', gap: 12, alignItems: 'center', borderBottom: border, opacity: q.active ? 1 : 0.45, transition: 'opacity 0.2s' }}>
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: q.color, display: 'inline-block', flexShrink: 0 }} />
+              <span style={{ fontSize: 12, fontWeight: 500, color: C.text0 }}>{q.name}</span>
+              <span style={{ fontSize: 11, color: C.text1 }}>{q.owner_name || '—'}</span>
+              <span style={{ fontSize: 11, color: C.text2 }}>{q.ticket_count ?? '—'}</span>
+              <Toggle on={q.active} onToggle={() => toggleQueue(q.id)} />
+              <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }}>
+                <ActionBtn label="Editar"   onClick={() => openEdit(q)} />
+                <ActionBtn label="Eliminar" danger onClick={() => { setDeleteError(''); setConfirm(q.id); }} />
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {modal && (

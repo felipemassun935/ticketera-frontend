@@ -4,17 +4,20 @@ import { api } from '../services/api';
 const AdminCtx = createContext(null);
 
 export function AdminProvider({ children }) {
-  const [queues, setQueues] = useState([]);
-  const [users,  setUsers]  = useState([]);
-  const [roles,  setRoles]  = useState([]);
+  const [queues,    setQueues]    = useState([]);
+  const [users,     setUsers]     = useState([]);
+  const [roles,     setRoles]     = useState([]);
+  const [slaRules,  setSlaRules]  = useState([]);
 
   const loadAdmin = useCallback(async () => {
-    const [qRes, rRes] = await Promise.all([
+    const [qRes, rRes, sRes] = await Promise.all([
       api.get('/queues'),
       api.get('/roles'),
+      api.get('/sla-rules'),
     ]);
     setQueues(qRes.queues);
     setRoles(rRes.roles);
+    setSlaRules(sRes.rules);
     api.get('/users').then(r => setUsers(r.users)).catch(() => {});
   }, []);
 
@@ -54,6 +57,24 @@ export function AdminProvider({ children }) {
     setUsers(us => us.map(x => x.id === id ? user : x));
   }
 
+  // ── SLA Rules ─────────────────────────────────────────────────
+  async function addSlaRule(r) {
+    const { rule } = await api.post('/sla-rules', r);
+    setSlaRules(rs => [...rs, rule]);
+  }
+  async function updateSlaRule(r) {
+    const { rule } = await api.patch(`/sla-rules/${r.id}`, r);
+    setSlaRules(rs => rs.map(x => x.id === r.id ? rule : x));
+  }
+  async function removeSlaRule(id) {
+    await api.del(`/sla-rules/${id}`);
+    setSlaRules(rs => rs.filter(x => x.id !== id));
+  }
+  async function toggleSlaRule(id) {
+    const { rule } = await api.patch(`/sla-rules/${id}/toggle`);
+    setSlaRules(rs => rs.map(x => x.id === id ? rule : x));
+  }
+
   // ── Roles ──────────────────────────────────────────────────────
   async function addRole(r) {
     const { role } = await api.post('/roles', { id: r.id, label: r.label, description: r.description, color: r.color, permissions: r.permissions });
@@ -70,9 +91,10 @@ export function AdminProvider({ children }) {
 
   return (
     <AdminCtx.Provider value={{
-      queues, addQueue, updateQueue, removeQueue, toggleQueue,
-      users,  addUser,  updateUser,  removeUser,  toggleUser,
-      roles,  addRole,  updateRole,  removeRole,
+      queues,    addQueue,    updateQueue,    removeQueue,    toggleQueue,
+      users,     addUser,     updateUser,     removeUser,     toggleUser,
+      roles,     addRole,     updateRole,     removeRole,
+      slaRules,  addSlaRule,  updateSlaRule,  removeSlaRule,  toggleSlaRule,
       loadAdmin,
     }}>
       {children}

@@ -6,10 +6,17 @@ import { C, iS } from '../styles/tokens';
 import Avatar from '../components/ui/Avatar';
 import FormField from '../components/forms/FormField';
 
+function getSlaForPriority(slaRules, priority) {
+  const match = slaRules.find(r => r.active && r.priority === priority && (!r.dept || r.dept === 'all'))
+             || slaRules.find(r => r.active && r.priority === priority);
+  if (match) return [match.r1 || '—', match.res || '—'];
+  return SLA_MAP[priority] ?? ['—', '—'];
+}
+
 const EMPTY = { title: '', queue_id: '', category: 'Infraestructura', priority: 'medium', desc: '', tags: '', assignee_id: '' };
 
 export default function CreateView({ role, onCreated }) {
-  const { queues, users } = useAdmin();
+  const { queues, users, slaRules } = useAdmin();
   const [form,    setForm]    = useState(EMPTY);
   const [created, setCreated] = useState(null);
   const [saving,  setSaving]  = useState(false);
@@ -120,17 +127,22 @@ export default function CreateView({ role, onCreated }) {
           <input value={form.tags} onChange={e => f('tags', e.target.value)} placeholder="vpn, windows (separadas por coma)" style={{ ...iS, width: '100%' }} />
         </FormField>
 
-        <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 5, padding: '10px 12px' }}>
-          <div style={{ fontSize: 9, color: C.text2, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>SLA estimado — {PRI_CFG[form.priority]?.label}</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            {[['1ª Respuesta', SLA_MAP[form.priority]?.[0]], ['Resolución', SLA_MAP[form.priority]?.[1]]].map(([l, v]) => (
-              <div key={l}>
-                <div style={{ fontSize: 10, color: C.text2, marginBottom: 2 }}>{l}</div>
-                <div style={{ fontSize: 15, fontWeight: 600, color: C.accent }}>{v}</div>
+        {(() => {
+          const [slaR1, slaRes] = getSlaForPriority(slaRules, form.priority);
+          return (
+            <div style={{ background: C.bg2, border: `1px solid ${C.border}`, borderRadius: 5, padding: '10px 12px' }}>
+              <div style={{ fontSize: 9, color: C.text2, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 7 }}>SLA estimado — {PRI_CFG[form.priority]?.label}</div>
+              <div style={{ display: 'flex', gap: 20 }}>
+                {[['1ª Respuesta', slaR1], ['Resolución', slaRes]].map(([l, v]) => (
+                  <div key={l}>
+                    <div style={{ fontSize: 10, color: C.text2, marginBottom: 2 }}>{l}</div>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: C.accent }}>{v}</div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          );
+        })()}
 
         {error && <div style={{ fontSize: 11, color: 'var(--red)' }}>{error}</div>}
 

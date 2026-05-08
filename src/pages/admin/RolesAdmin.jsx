@@ -64,20 +64,23 @@ export default function RolesAdmin() {
   const [modal,   setModal]   = useState(null);   // null | 'add' | 'edit'
   const [form,    setForm]    = useState(EMPTY_ROLE);
   const [confirm, setConfirm] = useState(null);
+  const [error,   setError]   = useState('');
 
-  function openAdd()   { setForm(EMPTY_ROLE); setModal('add'); }
-  function openEdit(r) { setForm(r);          setModal('edit'); }
-  function closeModal(){ setModal(null); }
+  function openAdd()   { setForm(EMPTY_ROLE); setModal('add');  setError(''); }
+  function openEdit(r) { setForm(r);          setModal('edit'); setError(''); }
+  function closeModal(){ setModal(null); setError(''); }
 
-  function save() {
+  async function save() {
     if (!form.label.trim()) return;
-    const payload = {
-      ...form,
-      id: form.id || `role_${form.label.toLowerCase().replace(/\s+/g, '_')}`,
-    };
-    if (modal === 'add') addRole(payload);
-    else                 updateRole(payload);
-    closeModal();
+    try {
+      const payload = {
+        ...form,
+        id: form.id || `role_${form.label.toLowerCase().replace(/\s+/g, '_')}`,
+      };
+      if (modal === 'add') await addRole(payload);
+      else                 await updateRole(payload);
+      closeModal();
+    } catch (e) { setError(e.message); }
   }
 
   function togglePerm(permId) {
@@ -239,6 +242,8 @@ export default function RolesAdmin() {
                 Este rol del sistema solo puede editarse parcialmente.
               </div>
             )}
+
+            {error && <div style={{ fontSize: 11, color: 'var(--red)' }}>{error}</div>}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
               <button onClick={closeModal} style={{ background: 'transparent', border: `1px solid ${C.border}`, color: C.text2, fontSize: 11, padding: '5px 14px', borderRadius: 4, cursor: 'pointer' }}>Cancelar</button>

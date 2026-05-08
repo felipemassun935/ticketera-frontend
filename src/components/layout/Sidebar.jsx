@@ -79,9 +79,9 @@ export default function Sidebar({ active, setActive, tickets, role }) {
           <SidebarBtn id="unassigned" label="Sin asignar" badge={unCount}  active={active} onClick={setActive} />
         </Section>
 
-        {role !== 'customer' && queues.length > 0 && (
+        {role !== 'customer' && queues.some(q => q.active) && (
           <Section label="Bandejas">
-            {queues.map(q => (
+            {queues.filter(q => q.active).map(q => (
               <SidebarBtn key={q.id} id={`q_${q.id}`} label={q.name} badge={qc[q.id] || 0} dot={q.color} active={active} onClick={setActive} />
             ))}
           </Section>

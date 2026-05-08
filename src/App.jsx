@@ -100,7 +100,7 @@ function AppInner() {
           {!selected && active === 'create'       && <CreateView role={role} onCreated={loadTickets} />}
           {!selected && active === 'kb'           && <KBView role={role} />}
           {!selected && active === 'templates'    && role !== 'customer' && <TemplatesAdmin role={role} />}
-          {!selected && active === 'sla'          && role !== 'customer' && <SLAView />}
+          {!selected && active === 'sla'          && role !== 'customer' && <SLAView role={role} />}
           {!selected && active === 'reports'      && role !== 'customer' && <ReportsView />}
           {!selected && active === 'hours'        && <HoursView />}
           {!selected && active === 'admin_hours'  && isAdmin && <HoursReviewAdmin />}
