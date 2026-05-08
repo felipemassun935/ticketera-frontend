@@ -11,16 +11,15 @@ export function AdminProvider({ children }) {
   const [priorities, setPriorities] = useState([]);
 
   const loadAdmin = useCallback(async () => {
-    const [qRes, rRes, sRes, pRes] = await Promise.all([
+    const [qRes, rRes, sRes] = await Promise.all([
       api.get('/queues'),
       api.get('/roles'),
       api.get('/sla-rules'),
-      api.get('/priorities'),
     ]);
     setQueues(qRes.queues);
     setRoles(rRes.roles);
     setSlaRules(sRes.rules);
-    setPriorities(pRes.priorities);
+    api.get('/priorities').then(r => setPriorities(r.priorities)).catch(() => {});
     api.get('/users').then(r => setUsers(r.users)).catch(() => {});
   }, []);
 

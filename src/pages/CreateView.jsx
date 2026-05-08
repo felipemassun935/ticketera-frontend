@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAdmin } from '../context/AdminContext';
-import { CATEGORIES, SLA_MAP } from '../constants';
+import { CATEGORIES } from '../constants';
 import { api } from '../services/api';
 import { C, iS } from '../styles/tokens';
 import Avatar from '../components/ui/Avatar';
